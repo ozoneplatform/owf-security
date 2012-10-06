@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="owf-security" default="distrib" basedir=".">
+	<property environment="env"/>
+	
+	<property name="build.dir" value="${basedir}/target" />
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="src.dir" value="${basedir}/src/main/java" />
+	<property name="resource.dir" value="${basedir}/src/main/resources" />
+
+	<path id="compile.classpath">
+		<pathelement location="${build.dir}/classes"/>
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<target name="clean-build-dir" description="Cleans out the build directory.">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.dir}/classes" />
+	</target>
+	
+	<target name="compile" depends="clean-build-dir" description="Compiles classes.">
+  		<javac srcdir="${src.dir}"
+  			   destdir="${build.dir}/classes"
+               classpathref="compile.classpath"
+               debug="true">
+           <compilerarg value="-Xlint"/>
+       </javac>
+	</target>
+
+	<target name="default-ozone-jar" depends="compile" description="Creates default Ozone owf-security jar.">
+		<jar destfile="${build.dir}/owf-security.jar" 
+		     basedir="${build.dir}/classes"
+		     includes="**/*.class"
+		/>
+	</target>
+			
+	<target name="distrib" depends="default-ozone-jar"/>
+
+    <target name="diagnostics" description="Displays Ant diagnostics.">
+        <diagnostics/>
+    </target>
+
+</project>
