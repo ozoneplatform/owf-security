@@ -22,6 +22,7 @@
         <sec:port-mappings>
             <sec:port-mapping http="${ozone.unsecurePort}" https="${ozone.port}"/>
         </sec:port-mappings>
+        <sec:session-management session-authentication-strategy-ref="concurrentSessionControlStrategy"/>
 	</sec:http>
 
     <!-- the x509 element above automatically adds an AuthenticationProvider so
@@ -32,4 +33,5 @@
     <import resource="ozone-security-beans/ListenerBeans.xml" />
     <import resource="ozone-security-beans/LdapBeans.xml" />
 
+    <import resource="ozone-security-beans/SessionManagementBeans.xml" />
 </beans>

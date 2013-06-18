@@ -31,6 +31,7 @@
         </sec:port-mappings>
 		
 		<sec:http-basic />
+        <sec:session-management session-authentication-strategy-ref="concurrentSessionControlStrategy"/>
     </sec:http>
     
     <sec:authentication-manager>
@@ -40,5 +41,6 @@
     <import resource="ozone-security-beans/MPLogInOutBeans.xml" />
     <import resource="ozone-security-beans/ListenerBeans.xml" />
     <import resource="ozone-security-beans/UserServiceBeans.xml" />
+    <import resource="ozone-security-beans/SessionManagementBeans.xml" />
     
 </beans>

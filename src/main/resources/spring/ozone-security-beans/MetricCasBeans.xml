@@ -18,6 +18,7 @@
 		</property>
 		<property name="proxyGrantingTicketStorage" ref="proxyGrantingTicketStorage" />
 		<property name="proxyReceptorUrl" value="/secure/receptor" />
+        <property name="sessionAuthenticationStrategy" ref="concurrentSessionControlStrategy"/>
 	</bean>
 
 	<bean id="casProcessingFilterEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
