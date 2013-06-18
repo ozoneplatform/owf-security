@@ -21,6 +21,7 @@
         <sec:custom-filter ref="ozoneCookieFilter" before="ANONYMOUS_FILTER"/>
         <sec:custom-filter ref="casSingleSignOutFilter" after="LOGOUT_FILTER"/><!-- CAS SIGN OUT FILTER -->
         <sec:custom-filter ref="casProcessingFilter" after="CAS_FILTER" />
+        <sec:custom-filter ref="concurrencyFilter" position="CONCURRENT_SESSION_FILTER" />
         <sec:port-mappings>
             <sec:port-mapping http="${ozone.unsecurePort}" https="${ozone.port}"/>
         </sec:port-mappings>
