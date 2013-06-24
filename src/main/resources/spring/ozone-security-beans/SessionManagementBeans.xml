@@ -9,7 +9,7 @@
         <property name="expiredUrl" value="/" />
     </bean>
 
-    <bean id="concurrentSessionControlStrategy" class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
+    <bean id="concurrentSessionControlStrategy" class="ozone.security.session.OzoneConcurrentSessionControlStrategy">
         <constructor-arg name="sessionRegistry" ref="sessionRegistry" />
         <property name="maximumSessions" value="1" />
     </bean>
