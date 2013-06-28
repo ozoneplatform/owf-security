@@ -69,6 +69,8 @@
 		<dependency org="javax.servlet" name="servlet-api" 
 			rev="2.5" conf="runtime->default">
 		</dependency>
+        <dependency org="net.sf.ehcache" name="ehcache-core" 
+            rev="1.7.1" conf="runtime->default" />
 
 		<exclude org="org.springframework" module="spring-support" />
 		<exclude org="org.springframework" module="spring-aop" />

@@ -14,5 +14,5 @@
         <property name="maximumSessions" value="1" />
     </bean>
 
-    <bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+    <bean id="sessionRegistry" class="ozone.security.session.ClusteredSessionRegistryImpl" />
 </beans>

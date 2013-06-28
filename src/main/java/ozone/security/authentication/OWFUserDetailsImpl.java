@@ -151,4 +151,24 @@ public class OWFUserDetailsImpl implements OWFUserDetails{
     	}
     	return sb.toString();
     }
+
+    public boolean equals(Object other) {
+        return this.getClass() == other.getClass() && this.equals((OWFUserDetailsImpl)other);
+    }
+
+    /**
+     * equals is overridden to compare based on username.  This makes sense since the rest 
+     * of the application uses usernames to uniquely identify users.
+     */
+    public boolean equals(OWFUserDetailsImpl other) {
+        return (this.username == null ? other.username == null : 
+            this.username.equals(other.username));
+    }
+
+    /**
+     * overridden to coincide with equals
+     */
+    public int hashCode() {
+        return (this.username == null ? 0 : this.username.hashCode());
+    }
 }
