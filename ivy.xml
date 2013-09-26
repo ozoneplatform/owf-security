@@ -8,7 +8,7 @@
         <conf name="release" />
 	</configurations>
 	<publications>
-    	<artifact name="owf-security" conf="default,compile,runtime,release" />
+    	<artifact name="owf-security" conf="default,compile,runtime,release" type="pom" />
     	<artifact name="owf-security-project" conf="zip,release" type="zip" ext="zip"/>
     	<artifact name="owf-security-extras" conf="zip,release" type="zip" ext="zip"/>
     </publications>

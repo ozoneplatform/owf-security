@@ -1,0 +1,121 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    compile {
+        exclude group: 'javax.jms', module: 'jms'
+    }
+
+    task {
+        zipExtras.dependsOn 'initStaging'
+    }
+}
+
+dependencies {
+    compile 'opensymphony:oscache:2.4', 'org.springframework.security:spring-security-core:3.0.5.RELEASE',
+            'org.springframework.security:spring-security-cas-client:3.0.5.RELEASE',
+            'org.springframework.security:spring-security-web:3.0.5.RELEASE',
+            'org.springframework.security:spring-security-ldap:3.0.5.RELEASE',
+            'org.springframework:spring-web:3.0.5.RELEASE', 'org.springframework:spring-beans:3.0.5.RELEASE',
+            'org.springframework:spring-context:3.0.5.RELEASE',
+            'org.jasig.cas:cas-client-core:3.1.3', 'log4j:log4j:1.2.16', 'commons-lang:commons-lang:2.4',
+            'junit:junit:4.8.1', 'javax.servlet:servlet-api:2.5', 'net.sf.ehcache:ehcache-core:1.7.1'
+}
+
+uploadArchives {
+    def credentials = getMavenDeploymentCredentials()
+    repositories {
+        mavenDeployer {
+            repository(url: 'https://www.owfgoss.org/nexus/content/repositories/snapshots') {
+                authentication(userName: credentials.username, password: credentials.password)
+            }
+            repository(url: 'https://www.owfgoss.org/nexus/content/repositories/releases') {
+                authentication(userName: credentials.username, password: credentials.password)
+            }
+
+            addFilter('extras') { artifact, file ->
+                file.name == 'owf-security-extras.zip'
+            }
+
+            addFilter('security') { artifact, file ->
+                file.name == 'ozone-security.jar'
+            }
+
+            addFilter('project') { artifact, file ->
+                file.name == 'owf-security-project.zip'
+            }
+
+            pom('security').version = '3.17'
+            pom('security').artifactId = 'owf-security'
+            pom('security').groupId = 'ozone-widgeting-framework-legacy'
+
+            pom('extras').version = '3.17'
+            pom('extras').artifactId = 'owf-security-extras'
+            pom('extras').groupId = 'ozone-widgeting-framework-legacy'
+
+            pom('project').version = '3.17'
+            pom('project').artifactId = 'owf-security-project'
+            pom('project').groupId = 'ozone-widgeting-framework-legacy'
+        }
+    }
+}
+task initStaging << {
+    ant.mkdir(dir: 'staging')
+    ant.mkdir(dir: 'staging/owf-security')
+    ant.mkdir(dir: 'staging/apache-tomcat-7.0.21')
+    ant.mkdir(dir: 'staging/apache-tomcat-7.0.21/lib')
+}
+task zipExtras << {
+    ant.copy(todir: 'staging/apache-tomcat-7.0.21/lib') {
+        fileset(dir: 'src/main/resources/spring/') {
+            include name: 'ozone-security-beans/*'
+            include name: 'OWFsecurityContext.xml'
+            include name: 'MPsecurityContext.xml'
+            include name: 'MetricSecurityContext.xml'
+            include name: 'users.properties'
+        }
+    }
+    ant.copy(todir: 'staging/owf-security') {
+        fileset(dir: 'src/main/resources/spring')
+    }
+
+    ant.zip(basedir: 'staging', destfile: 'build/libs/owf-security-extras.zip',
+            includes: 'apache-tomcat-7.0.21/**/*,owf-security/**/*')
+}
+
+task zipProject << {
+    ant.zip(basedir: '.', destfile: 'build/libs/owf-security-project.zip',
+            includes: 'build.xml,README.TXT,lib/**,src/**,', excludes: 'src/main/resources/spring/**,*.zip')
+}
+
+artifacts {
+    archives file('build/libs/owf-security-extras.zip')
+    archives file('build/libs/owf-security-project.zip')
+}
+
+def getMavenServerSettings() {
+    String userHome = System.getProperty('user.home')
+    File settingsFile = new File("${userHome}/.m2/settings.xml")
+
+    new XmlSlurper().parse(settingsFile).servers.server
+}
+
+def getMavenDeploymentCredentials() {
+    def settingsXml = getMavenServerSettings()
+    def deploymentServer = [:]
+    settingsXml.each { server ->
+        if(server.id == 'deployment') {
+            deploymentServer.with {
+                id = server.id
+                username = server.username
+                password = server.password
+            }
+        }
+    }
+
+    deploymentServer
+}
