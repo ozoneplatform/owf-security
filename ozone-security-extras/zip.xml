@@ -1,0 +1,39 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+    <baseDirectory>/</baseDirectory>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <fileSets>
+        <!--
+          Make set of only default sample configuration files. The output
+          directory structure will allow it to overlay the OWF custom
+          Tomcat.
+          -->
+        <fileSet>
+            <directory>../src/main/resources/spring</directory>
+            <outputDirectory>${project.tomcat.directory}/lib</outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+            <includes>
+                <include>OWFsecurityContext.xml</include>
+                <include>MPsecurityContext.xml</include>
+                <include>MetricSecurityContext.xml</include>
+                <include>users.properties</include>
+                <include>ozone-security-beans/*</include>
+            </includes>
+            <excludes>
+                <exclude>**/.gitignore</exclude>
+            </excludes>
+        </fileSet>
+        <!-- Make set of ALL sample configuration files -->
+        <fileSet>
+            <directory>../src/main/resources/spring</directory>
+            <outputDirectory>owf-security</outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+            <excludes>
+                <exclude>**/.gitignore</exclude>
+            </excludes>
+        </fileSet>
+    </fileSets>
+</assembly>

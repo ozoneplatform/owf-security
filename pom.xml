@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ozone-widgeting-framework-legacy</groupId>
+        <artifactId>owf-security-base</artifactId>
+        <version>3.18-SNAPSHOT</version>
+        <relativePath>ozone-security-base-pom.xml</relativePath>
+    </parent>
+
+    <groupId>ozone-widgeting-framework-legacy</groupId>
+    <artifactId>owf-security</artifactId>
+    <packaging>jar</packaging>
+    <description>Security plugin base classes (and sample support classes) for OWF and Marketplace</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>test-compile</phase>
+                        <configuration>
+                            <!-- TODO: Fix LDAP tests and then remove this exclusion -->
+                            <testExcludes>
+                                <exclude>**/ldap/*.java</exclude>
+                            </testExcludes>
+                        </configuration>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

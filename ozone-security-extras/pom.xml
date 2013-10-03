@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ozone-widgeting-framework-legacy</groupId>
+        <artifactId>owf-security-base</artifactId>
+        <version>3.18-SNAPSHOT</version>
+        <relativePath>../ozone-security-base-pom.xml</relativePath>
+    </parent>
+
+    <groupId>ozone-widgeting-framework-legacy</groupId>
+    <artifactId>owf-security-extras</artifactId>
+    <packaging>pom</packaging>
+    <description>Security plugin sample configuration files for OWF and Marketplace</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>create-distribution</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>zip.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
