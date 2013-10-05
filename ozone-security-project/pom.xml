@@ -3,17 +3,33 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>ozone-widgeting-framework-legacy</groupId>
-        <artifactId>owf-security-base</artifactId>
-        <version>3.18-SNAPSHOT</version>
-        <relativePath>../ozone-security-base-pom.xml</relativePath>
-    </parent>
-
     <groupId>ozone-widgeting-framework-legacy</groupId>
     <artifactId>owf-security-project</artifactId>
+    <version>3.18-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Security plugin source code package for OWF and Marketplace</description>
+
+    <distributionManagement>
+        <repository>
+            <id>deployment</id>
+            <name>Ozone Releases</name>
+            <url>https://www.owfgoss.org/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>deployment</id>
+            <name>Ozone Snapshots</name>
+            <url>https://www.owfgoss.org/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <dependencies>
+        <dependency>
+            <!-- Pull in all dependencies of owf-security JAR -->
+            <groupId>ozone-widgeting-framework-legacy</groupId>
+            <artifactId>owf-security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -31,6 +47,9 @@
                         </goals>
                         <configuration>
                             <outputDirectory>../lib</outputDirectory>
+
+                            <!-- DO NOT copy owf-security JAR -->
+                            <excludeArtifactIds>owf-security</excludeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>

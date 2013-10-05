@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ozone-widgeting-framework-legacy</groupId>
+    <artifactId>owf-security-build-all</artifactId>
+    <version>3.18-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <description>Project to build all artifacts for the OWF and Marketplace security plugin</description>
+    <!--
+      This allows the OZONE team to produce all 3 artifacts for upload to
+      Nexus. For simplicity end users that download the owf-security-project
+      (source code) will only have the ability to compile their own
+      owf-security JAR; the other two projects will not be included.
+      -->
+
+    <distributionManagement>
+        <repository>
+            <id>deployment</id>
+            <name>Ozone Releases</name>
+            <url>https://www.owfgoss.org/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>deployment</id>
+            <name>Ozone Snapshots</name>
+            <url>https://www.owfgoss.org/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <modules>
+        <module>.</module>
+        <module>ozone-security-extras</module>
+        <module>ozone-security-project</module>
+    </modules>
+</project>

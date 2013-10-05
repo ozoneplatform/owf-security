@@ -18,6 +18,7 @@
                 <include>README.TXT</include>
                 <include>lib/**</include>
                 <include>src/**</include>
+                <include>pom.xml</include>
             </includes>
             <excludes>
                 <exclude>**/.gitignore</exclude>
