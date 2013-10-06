@@ -15,19 +15,6 @@
       owf-security JAR; the other two projects will not be included.
       -->
 
-    <distributionManagement>
-        <repository>
-            <id>deployment</id>
-            <name>Ozone Releases</name>
-            <url>https://www.owfgoss.org/nexus/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>deployment</id>
-            <name>Ozone Snapshots</name>
-            <url>https://www.owfgoss.org/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <modules>
         <module>.</module>
         <module>ozone-security-extras</module>
