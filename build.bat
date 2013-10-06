@@ -6,4 +6,4 @@ Builds all ozone-security artifacts. To release (to Nexus) execute:
 
 :RunScript
 
-mvn -f build-all-pom.xml %*
+mvn -f ozone-security-build-all\pom.xml %*

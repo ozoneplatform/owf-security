@@ -4,4 +4,4 @@
 #     $ ./build.sh clean deploy
 #
 
-mvn -f build-all-pom.xml $*
+mvn -f ozone-security-build-all/pom.xml $*
