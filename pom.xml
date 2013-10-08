@@ -197,5 +197,21 @@
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!--
+                  Exclude configuration resources from the JAR. The end user
+                  must (1) pick specific sample Spring configuration files,
+                  (2) customize said files for their environment, and then
+                  (3) deploy them to the appropriate CLASSPATH location on
+                  their server manually.
+                  -->
+                <excludes>
+                    <exclude>conf/**</exclude>
+                    <exclude>spring/**</exclude>
+                </excludes>
+            </resource>
+        </resources>
     </build>
 </project>

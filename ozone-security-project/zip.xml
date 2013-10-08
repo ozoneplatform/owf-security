@@ -22,7 +22,7 @@
             </includes>
             <excludes>
                 <exclude>**/.gitignore</exclude>
-                <exclude>src/main/resources/spring/**</exclude>
+                <exclude>src/site/**</exclude>
             </excludes>
         </fileSet>
     </fileSets>
