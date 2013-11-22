@@ -5,7 +5,7 @@
 
     <groupId>ozone-widgeting-framework-legacy</groupId>
     <artifactId>owf-security-build-all</artifactId>
-    <version>3.18-SNAPSHOT</version>
+    <version>3.19</version>
     <packaging>pom</packaging>
     <description>Project to build all artifacts for the OWF and Marketplace security plugin</description>
     <!--
