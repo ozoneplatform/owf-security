@@ -4,13 +4,15 @@ Ozone Widgeting Framework Security Project
 
 SAMPLE SECURITY PROJECTS
 
-We ship with 4 sample security projects.  Each security project has an
+We ship with 6 sample security projects.  Each security project has an
 associated Spring XML Configuration file.
 
-1.  Default, x509 fallback to CAS
+1.  Default, x509 fallback to Basic HTTP
 2.  CAS only
-3.  x509 only
-4.  x509/LDAP
+3.  x509/CAS
+4.  x509 only
+5.  x509/LDAP
+6.  HTTP Basic Only
 
 ******************************************************************************
 
@@ -18,15 +20,23 @@ HOW TO SWITCH BETWEEN SECURITY PROJECTS
 
 1.  Choose the spring configuration file that maps to the sample of your
     choice.  The four samples and associated spring configuration files are:
-       - Default,  x509 fallback to CAS  OWFsecurityContext.xml
+       - Default,  x509 fallback to Basic HTTP  OWFsecurityContext.xml
        - CAS only  OWFsecurityContext_CAS_only.xml
+       - x509/CAS OWFsecurityContext_x509_CAS.xml
        - x509 only OWFsecurityContext_cert_only.xml
-       - x509/LDAP OWFsecurityContext_cert_ldap.xml
+       - x509/LDAP OWFsecurityContext_BasicSpringLogin.xml
+       - HTTP Basic only, OWFsecurityContext_cert_ldap.xml
     Take that spring configuration file and copy it into the Tomcat lib
     directory.  Delete any other spring configuration files in there, such
     as the default OWFSecurityContext.xml.
 
-2.  If you are trying out the x509/LDAP sample, it is designed to work with
+2. Begining with OWF 7.5, CAS is no longer bundled with the application. Should you
+   wish to try either of the CAS security plugins, the cas.war file is available
+   from the OWF Goss download site (https://www.owfgoss.org/downloads) in older 
+   versions of the bundle. In addition to copying the appropriate configuration 
+   file (from step 1), copy cas.war to the tomcat webapp directory of your bundle.
+
+3.  If you are trying out the x509/LDAP sample, it is designed to work with
     Apache DS installed on localhost and running on the default port, 10389.
     You can  download Apache DS from http://directory.apache.org and install
     it.  There are directions on the Apache DS website on how to install and
