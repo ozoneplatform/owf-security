@@ -19,7 +19,7 @@ associated Spring XML Configuration file.
 HOW TO SWITCH BETWEEN SECURITY PROJECTS
 
 1.  Choose the spring configuration file that maps to the sample of your
-    choice.  The four samples and associated spring configuration files are:
+    choice.  The six samples and associated spring configuration files are:
        - Default,  x509 fallback to Basic HTTP  OWFsecurityContext.xml
        - CAS only  OWFsecurityContext_CAS_only.xml
        - x509/CAS OWFsecurityContext_x509_CAS.xml
