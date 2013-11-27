@@ -38,4 +38,5 @@
     <import resource="ozone-security-beans/MPCasBeans.xml" />
     <import resource="ozone-security-beans/UserServiceBeans.xml" />
     <import resource="ozone-security-beans/SessionManagementBeans.xml" />
+    <import resource="ozone-security-beans/MethodSecurity.xml" />
 </beans>
