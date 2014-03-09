@@ -26,7 +26,7 @@ public class PerfTestingDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         Collection<OwfGroup> owfGroups = new ArrayList<OwfGroup>();
         OWFUserDetailsImpl owfUser = new OWFUserDetailsImpl(username, "password", getAuthorities(username), owfGroups);
-        owfUser.setDisplayName("username");
+        owfUser.setDisplayName(username);
         owfUser.setEmail(username + "@ozonePerfTesting.org");
         owfUser.setOrganization(username + " organization");
 

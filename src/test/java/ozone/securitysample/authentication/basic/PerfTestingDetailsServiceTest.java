@@ -46,9 +46,15 @@ public class PerfTestingDetailsServiceTest {
     }
 
     public void testLoadUserByUsername() {
-        UserDetails details = detailsService.loadUserByUsername("someUser");
+        String username = "someUser";
+        UserDetails details = detailsService.loadUserByUsername(username);
+        OWFUserDetailsImpl owfDetails;
 
         assertTrue(new IsInstanceOf(OWFUserDetailsImpl.class).matches(details));
+        owfDetails = (OWFUserDetailsImpl) details;
+        assertEquals(username, owfDetails.getDisplayName());
+        assertEquals(username + "@ozonePerfTesting.org", owfDetails.getEmail());
+        assertEquals(username + " organization", owfDetails.getOrganization());
 
     }
 }
