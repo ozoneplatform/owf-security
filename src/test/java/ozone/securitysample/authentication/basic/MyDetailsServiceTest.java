@@ -68,7 +68,7 @@ public class MyDetailsServiceTest {
 		user = userMap.get("jjones");
 		assertEquals("jjones",user.getUsername());
 		assertEquals("password",user.getPassword());
-		Iterator<GrantedAuthority> iter = user.getAuthorities().iterator();
+		Iterator<? extends GrantedAuthority> iter = user.getAuthorities().iterator();
 		assertEquals("ROLE_ADMIN", iter.next().getAuthority());
 		assertEquals("ROLE_EXTERNADMIN", iter.next().getAuthority());
 		assertEquals("Jimmy Jones",user.getDisplayName());
@@ -132,7 +132,7 @@ public class MyDetailsServiceTest {
 		assertTrue(new IsInstanceOf(OWFUserDetailsImpl.class).matches(userDetails));
 		assertEquals("jjones",userDetails.getUsername());
 		assertEquals(2,userDetails.getAuthorities().size());
-		Iterator<GrantedAuthority> iter = userDetails.getAuthorities().iterator();
+		Iterator<? extends GrantedAuthority> iter = userDetails.getAuthorities().iterator();
 		assertEquals("ROLE_ADMIN", iter.next().getAuthority());
 		assertEquals("ROLE_EXTERNADMIN", iter.next().getAuthority());
 	}

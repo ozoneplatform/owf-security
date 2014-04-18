@@ -20,7 +20,7 @@ public class OWFUserDetailsImpl implements OWFUserDetails{
 	private static final long serialVersionUID = 2L;
 
 	// holds the authorities this user has--their ROLES.  (IE, ROLE_USER and ROLE_ADMIN)
-	private Collection<GrantedAuthority> authorities = null;
+	private Collection<? extends GrantedAuthority> authorities = null;
 	
 	// The user's password
     private String password = null;
@@ -47,14 +47,14 @@ public class OWFUserDetailsImpl implements OWFUserDetails{
      * @param authorities  
      * @param groups
      */
-    public OWFUserDetailsImpl(String username, String password, Collection<GrantedAuthority> authorities, Collection<OwfGroup> groups) {
+    public OWFUserDetailsImpl(String username, String password, Collection<? extends GrantedAuthority> authorities, Collection<OwfGroup> groups) {
     	this.authorities = authorities;
     	this.password = password;
     	this.username = username;
         this.owfGroups = groups;
     }
    
-    public Collection<GrantedAuthority> getAuthorities() {
+    public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
 

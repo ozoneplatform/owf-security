@@ -10,3 +10,5 @@ target
 .gradle
 build
 staging
+.classpath
+.project

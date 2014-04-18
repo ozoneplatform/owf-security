@@ -22,7 +22,7 @@ public class MockAuthentication implements Authentication {
 		this.authentication = authentication;
 	}
 
-	public Collection<GrantedAuthority> getAuthorities() {
+	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return userDetails.getAuthorities();
 	}
 

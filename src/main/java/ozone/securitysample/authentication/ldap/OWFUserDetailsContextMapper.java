@@ -60,7 +60,8 @@ public class OWFUserDetailsContextMapper implements UserDetailsContextMapper {
      * @param authority - Authorities that this user has been determined to have
 	 * @return userDetails object
 	 */
-	public UserDetails mapUserFromContext(DirContextOperations ctx, String username, Collection<GrantedAuthority> authority) {
+    @Override
+	public UserDetails mapUserFromContext(DirContextOperations ctx, String username, Collection<? extends GrantedAuthority> authority) {
 		OWFUserDetailsImpl userDetails = null;
 
 
@@ -79,6 +80,7 @@ public class OWFUserDetailsContextMapper implements UserDetailsContextMapper {
 		return userDetails;
 	}
 
+    @Override
     public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
         throw new UnsupportedOperationException("This plugin does not support the saving of user attributes");
     }
