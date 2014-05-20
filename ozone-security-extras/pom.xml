@@ -5,7 +5,7 @@
 
     <groupId>ozone-widgeting-framework-legacy</groupId>
     <artifactId>owf-security-extras</artifactId>
-    <version>3.25-SNAPSHOT</version>
+    <version>3.26-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Security plugin sample configuration files for OWF and Marketplace</description>
 
