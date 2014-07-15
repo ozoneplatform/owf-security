@@ -3,8 +3,8 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ozone-widgeting-framework-legacy</groupId>
-    <artifactId>owf-security-extras</artifactId>
+    <groupId>org.ozoneplatform</groupId>
+    <artifactId>ozone-security-extras</artifactId>
     <version>3.26-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Security plugin sample configuration files for OWF and Marketplace</description>
@@ -12,12 +12,12 @@
     <distributionManagement>
         <repository>
             <id>deployment</id>
-            <name>Ozone Releases</name>
+            <name>OZONE Releases</name>
             <url>https://www.owfgoss.org/nexus/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
             <id>deployment</id>
-            <name>Ozone Snapshots</name>
+            <name>OZONE Snapshots</name>
             <url>https://www.owfgoss.org/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>

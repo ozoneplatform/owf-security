@@ -3,16 +3,17 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ozone-widgeting-framework-legacy</groupId>
-    <artifactId>owf-security-build-all</artifactId>
+    <groupId>org.ozoneplatform</groupId>
+    <artifactId>ozone-security-build-all</artifactId>
     <version>3.26-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Project to build all artifacts for the OWF and Marketplace security plugin</description>
     <!--
       This allows the OZONE team to produce all 3 artifacts for upload to
-      Nexus. For simplicity end users that download the owf-security-project
-      (source code) will only have the ability to compile their own
-      owf-security JAR; the other two projects will not be included.
+      Nexus. For simplicity end users that download the
+      ozone-security-project (source code) will only have the ability to
+      compile their own ozone-security JAR; the other two projects will not
+      be included.
       -->
 
     <modules>

@@ -8,7 +8,7 @@
     <fileSets>
         <!--
           Make set of only default sample configuration files. The output
-          directory structure will allow it to overlay the OWF custom
+          directory structure will allow it to overlay the OZONE custom
           Tomcat.
           -->
         <fileSet>
@@ -29,7 +29,7 @@
         <!-- Make set of ALL sample configuration files -->
         <fileSet>
             <directory>../src/main/resources/spring</directory>
-            <outputDirectory>owf-security</outputDirectory>
+            <outputDirectory>ozone-security</outputDirectory>
             <useDefaultExcludes>true</useDefaultExcludes>
             <excludes>
                 <exclude>**/.gitignore</exclude>

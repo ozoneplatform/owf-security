@@ -1,8 +1,8 @@
-Ozone Widgeting Framework Security Project
+OZONE Widget Framework Security Project
 
 ******************************************************************************
 
-SAMPLE SECURITY PROJECTS
+SAMPLE SECURITY PROJECTS (for OWF and Marketplace 7.x)
 
 We ship with 6 sample security projects.  Each security project has an
 associated Spring XML Configuration file.
@@ -30,11 +30,12 @@ HOW TO SWITCH BETWEEN SECURITY PROJECTS
     directory.  Delete any other spring configuration files in there, such
     as the default OWFSecurityContext.xml.
 
-2. Begining with OWF 7.5, CAS is no longer bundled with the application. Should you
-   wish to try either of the CAS security plugins, the cas.war file is available
-   from the OWF Goss download site (https://www.owfgoss.org/downloads) in older 
-   versions of the bundle. In addition to copying the appropriate configuration 
-   file (from step 1), copy cas.war to the tomcat webapp directory of your bundle.
+2.  Beginning with OWF 7.5, CAS is no longer bundled with the application.
+    Should you wish to try either of the CAS security plugins, the cas.war
+    file is available from the OWF GOSS download site in older versions of
+    the bundle.  In addition to copying the appropriate configuration file
+    (from step 1), copy cas.war to the tomcat webapp directory of your
+    bundle.
 
 3.  If you are trying out the x509/LDAP sample, it is designed to work with
     Apache DS installed on localhost and running on the default port, 10389.
@@ -81,14 +82,14 @@ build.xml and pom.xml are located).
        ant
 
    The default target in build.xml will build and create the sample security
-   project in the target directory, called owf-security.jar.  
+   project in the target directory, called ozone-security.jar.  
 
 2. If using Maven execute:
 
        mvn clean package
 
    The above command will build and create the sample security project in
-   the target directory, called owf-security-*.jar, where * is the version
+   the target directory, called ozone-security-*.jar, where * is the version
    defined in pom.xml.
 
 This jar produced above contains base classes and support classes for all

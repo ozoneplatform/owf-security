@@ -2,9 +2,9 @@
  Overview
  ------
 
-OWF Security
+OZONE Security
 
-  This project contains the sample pluggable security models available for the Ozone Widgeting Framework.  There are several
+  This project contains the sample pluggable security models available for the OZONE Widget Framework.  There are several
   examples already provided that can be configured with external files.  Source code and a build script can also be downloaded
   to modify these, or create your own.
   
@@ -19,4 +19,4 @@ OWF Security
     [[4]] x509 Authentication with LDAP support for authorities
   
   
-  For more information on configuring and deploying the OWF Security jars, download the documentation {{{../downloads.html}here}}.
+  For more information on configuring and deploying the OZONE Security JARs, download the documentation {{{../downloads.html}here}}.

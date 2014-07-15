@@ -3,8 +3,8 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ozone-widgeting-framework-legacy</groupId>
-    <artifactId>owf-security-project</artifactId>
+    <groupId>org.ozoneplatform</groupId>
+    <artifactId>ozone-security-project</artifactId>
     <version>3.26-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Security plugin source code package for OWF and Marketplace</description>
@@ -12,21 +12,21 @@
     <distributionManagement>
         <repository>
             <id>deployment</id>
-            <name>Ozone Releases</name>
+            <name>OZONE Releases</name>
             <url>https://www.owfgoss.org/nexus/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
             <id>deployment</id>
-            <name>Ozone Snapshots</name>
+            <name>OZONE Snapshots</name>
             <url>https://www.owfgoss.org/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
     <dependencies>
         <dependency>
-            <!-- Pull in all dependencies of owf-security JAR -->
-            <groupId>ozone-widgeting-framework-legacy</groupId>
-            <artifactId>owf-security</artifactId>
+            <!-- Pull in all dependencies of ozone-security JAR -->
+            <groupId>org.ozoneplatform</groupId>
+            <artifactId>ozone-security</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -48,8 +48,8 @@
                         <configuration>
                             <outputDirectory>../lib</outputDirectory>
 
-                            <!-- DO NOT copy owf-security JAR -->
-                            <excludeArtifactIds>owf-security</excludeArtifactIds>
+                            <!-- DO NOT copy ozone-security JAR -->
+                            <excludeArtifactIds>ozone-security</excludeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>
