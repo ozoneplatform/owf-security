@@ -5,7 +5,7 @@
 
     <groupId>org.ozoneplatform</groupId>
     <artifactId>ozone-security-project</artifactId>
-    <version>3.26-SNAPSHOT</version>
+    <version>3.26</version>
     <packaging>pom</packaging>
     <description>Security plugin source code package for OWF and Marketplace</description>
 

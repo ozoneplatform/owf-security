@@ -5,7 +5,7 @@
 
     <groupId>org.ozoneplatform</groupId>
     <artifactId>ozone-security-extras</artifactId>
-    <version>3.26-SNAPSHOT</version>
+    <version>3.26</version>
     <packaging>pom</packaging>
     <description>Security plugin sample configuration files for OWF and Marketplace</description>
 
@@ -21,10 +21,6 @@
             <url>https://www.owfgoss.org/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-
-    <properties>
-        <project.tomcat.directory>apache-tomcat-7.0.21</project.tomcat.directory>
-    </properties>
 
     <build>
         <plugins>

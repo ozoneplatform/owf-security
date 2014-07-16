@@ -6,30 +6,10 @@
         <format>zip</format>
     </formats>
     <fileSets>
-        <!--
-          Make set of only default sample configuration files. The output
-          directory structure will allow it to overlay the OZONE custom
-          Tomcat.
-          -->
-        <fileSet>
-            <directory>../src/main/resources/spring</directory>
-            <outputDirectory>${project.tomcat.directory}/lib</outputDirectory>
-            <useDefaultExcludes>true</useDefaultExcludes>
-            <includes>
-                <include>OWFsecurityContext.xml</include>
-                <include>MPsecurityContext.xml</include>
-                <include>MetricSecurityContext.xml</include>
-                <include>users.properties</include>
-                <include>ozone-security-beans/*</include>
-            </includes>
-            <excludes>
-                <exclude>**/.gitignore</exclude>
-            </excludes>
-        </fileSet>
         <!-- Make set of ALL sample configuration files -->
         <fileSet>
             <directory>../src/main/resources/spring</directory>
-            <outputDirectory>ozone-security</outputDirectory>
+            <outputDirectory>/</outputDirectory>
             <useDefaultExcludes>true</useDefaultExcludes>
             <excludes>
                 <exclude>**/.gitignore</exclude>
