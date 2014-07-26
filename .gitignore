@@ -1,14 +1,26 @@
-*.iml
+# OS generated files #
+######################
 .DS_Store
-build-base-*
-lib
-staging
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+#Icon?
+ehthumbs.db
+Thumbs.db
+
+# IDE support files #
+#####################
+/.classpath
+/.project
+/.settings
+/lib
+/target-eclipse
 target
+*.iml
+.idea
+
+# Temporary files #
+###################
 *.stackdump
 *.swp
-.idea
-.gradle
-build
-staging
-.classpath
-.project
