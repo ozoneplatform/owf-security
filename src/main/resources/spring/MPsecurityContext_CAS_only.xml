@@ -7,7 +7,7 @@
        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
     <sec:http pattern="/unauthorized.jsp" security="none" />
-    <sec:http pattern="/cas*.jsp" security="none" requires-channel="https" />
+    <sec:http pattern="/cas*.jsp" security="none" />
     <sec:http pattern="/css/**" security="none" />
     <sec:http pattern="/js/**" security="none" />
     <sec:http pattern="/images/**" security="none" />
