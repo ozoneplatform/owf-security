@@ -8,7 +8,7 @@
 
     <sec:http create-session="stateless">
         <sec:intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN" requires-channel="https" />
-        <sec:form-login />
+        <sec:http-basic />
         <sec:port-mappings>
             <sec:port-mapping http="${ozone.unsecurePort}" https="${ozone.port}"/>
         </sec:port-mappings>
