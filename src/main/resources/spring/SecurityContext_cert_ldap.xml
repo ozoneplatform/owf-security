@@ -18,7 +18,6 @@
          we do not need to specify one -->
     <sec:authentication-manager alias="authenticationManager" />
 
-    <import resource="ozone-security-beans/MPLogInOutBeans.xml" />
     <import resource="ozone-security-beans/ListenerBeans.xml" />
     <import resource="ozone-security-beans/LdapBeans.xml" />
     <import resource="ozone-security-beans/MethodSecurity.xml" />

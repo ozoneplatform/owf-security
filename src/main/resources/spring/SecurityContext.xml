@@ -20,7 +20,6 @@
         <sec:authentication-provider user-service-ref="userService" />
     </sec:authentication-manager>
 
-    <import resource="ozone-security-beans/MPLogInOutBeans.xml" />
     <import resource="ozone-security-beans/ListenerBeans.xml" />
     <import resource="ozone-security-beans/UserServiceBeans.xml" />
     <import resource="ozone-security-beans/MethodSecurity.xml" />
