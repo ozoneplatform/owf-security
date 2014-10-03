@@ -8,15 +8,21 @@
 
     <sec:http create-session="stateless">
         <sec:intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN" requires-channel="https" />
-        <sec:x509 subject-principal-regex="CN=(.*?)," user-service-ref="userService" />
+        <!-- Cannot use <sec:x509> element since it adds an extra authenticationprovider that
+             bypasses the caching provider -->
+        <sec:custom-filter ref="x509Filter" position="X509_FILTER"/>
         <sec:port-mappings>
             <sec:port-mapping http="${ozone.unsecurePort}" https="${ozone.port}"/>
         </sec:port-mappings>
     </sec:http>
 
-    <!-- the x509 element above automatically adds an AuthenticationProvider so
-         we do not need to specify one -->
-    <sec:authentication-manager/>
+    <sec:authentication-manager alias="authenticationManager">
+        <sec:authentication-provider ref="cachingPreauthProvider"/>
+    </sec:authentication-manager>
+
+    <bean id="x509Filter" class="org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+    </bean>
 
     <import resource="ozone-security-beans/ListenerBeans.xml" />
     <import resource="ozone-security-beans/UserServiceBeans.xml" />
