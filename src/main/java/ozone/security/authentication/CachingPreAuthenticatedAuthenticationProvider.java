@@ -82,7 +82,7 @@ public class CachingPreAuthenticatedAuthenticationProvider
             ud = preAuthenticatedUserDetailsService.loadUserDetails(authentication);
         }
         else {
-            logger.error("User found in cache: " + authentication.getName());
+            logger.debug("User found in cache: " + authentication.getName());
         }
 
         userDetailsChecker.check(ud);
