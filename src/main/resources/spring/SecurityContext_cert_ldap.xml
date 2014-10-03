@@ -24,7 +24,6 @@
         <property name="authenticationManager" ref="authenticationManager"/>
     </bean>
 
-    <import resource="ozone-security-beans/ListenerBeans.xml" />
     <import resource="ozone-security-beans/LdapBeans.xml" />
     <import resource="ozone-security-beans/MethodSecurity.xml" />
 </beans>
