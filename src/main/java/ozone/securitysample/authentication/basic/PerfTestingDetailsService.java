@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
  * passed to the loadUserByUsername method. If the username contains the substring
  * "Admin", the user will be granted the admin role. The use case for this
  * implementation is to provide a minimally functional provider that at the same
- * time can scale to a large number of users for performance testing scenarios 
+ * time can scale to a large number of users for performance testing scenarios
  * where security is not a concern.
  */
 public class PerfTestingDetailsService implements UserDetailsService {
@@ -38,6 +38,9 @@ public class PerfTestingDetailsService implements UserDetailsService {
         authorities.add(new GrantedAuthorityImpl("ROLE_USER"));
         if(username.contains("Admin")) {
             authorities.add(new GrantedAuthorityImpl("ROLE_ADMIN"));
+        }
+        if(username.contains("Org")) {
+            authorities.add(new GrantedAuthorityImpl("ROLE_ORG_STEWARD"));
         }
 
         return authorities;

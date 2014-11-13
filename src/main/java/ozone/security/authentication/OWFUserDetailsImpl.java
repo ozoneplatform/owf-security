@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import ozone.security.authorization.target.OwfGroup;
 
 /**
- * This is the OWF UserDetails implementation.  It is a data model that 
+ * This is the OWF UserDetails implementation.  It is a data model that
  * encapsulates necessary information about the user.  See interface for
  * details about it's integration with the spring security flow.
  */
@@ -19,12 +19,12 @@ public class OWFUserDetailsImpl implements OWFUserDetails{
 	 */
 	private static final long serialVersionUID = 2L;
 
-	// holds the authorities this user has--their ROLES.  (IE, ROLE_USER and ROLE_ADMIN)
+	// holds the authorities this user has--their ROLES.  (IE, ROLE_USER, ROLE_ORG_STEWARD and ROLE_ADMIN)
 	private Collection<? extends GrantedAuthority> authorities = null;
-	
+
 	// The user's password
     private String password = null;
-    
+
     // the user's username.  Must be unique.
 	private String username = null;
 
@@ -41,10 +41,10 @@ public class OWFUserDetailsImpl implements OWFUserDetails{
     private Collection<OwfGroup> owfGroups = new ArrayList<OwfGroup>();
 
     /**
-     * 
-     * @param username  
+     *
+     * @param username
      * @param password
-     * @param authorities  
+     * @param authorities
      * @param groups
      */
     public OWFUserDetailsImpl(String username, String password, Collection<? extends GrantedAuthority> authorities, Collection<OwfGroup> groups) {
@@ -53,7 +53,7 @@ public class OWFUserDetailsImpl implements OWFUserDetails{
     	this.username = username;
         this.owfGroups = groups;
     }
-   
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
@@ -90,7 +90,7 @@ public class OWFUserDetailsImpl implements OWFUserDetails{
     public void setOrganization(String organization) {
         this.organization = organization;
     }
-    
+
 	public Collection<OwfGroup> getOwfGroups() {
 		return owfGroups;
 	}
@@ -128,7 +128,7 @@ public class OWFUserDetailsImpl implements OWFUserDetails{
     }
 
     /**
-     * @return String a comma delimited string list of the granted authorities (options: none, ROLE_USER and ROLE_ADMIN) 
+     * @return String a comma delimited string list of the granted authorities (options: none, ROLE_USER and ROLE_ADMIN)
      */
     public String displayAuthorities() {
     	StringBuffer sb = new StringBuffer(255);
@@ -138,10 +138,10 @@ public class OWFUserDetailsImpl implements OWFUserDetails{
     	}
     	return sb.toString();
     }
-    
-    
+
+
     /**
-     * @return String a comma delimited string list of the owf groups.  May be empty 
+     * @return String a comma delimited string list of the owf groups.  May be empty
      */
     public String displayOwfGroups() {
     	StringBuffer sb = new StringBuffer(255);
@@ -157,11 +157,11 @@ public class OWFUserDetailsImpl implements OWFUserDetails{
     }
 
     /**
-     * equals is overridden to compare based on username.  This makes sense since the rest 
+     * equals is overridden to compare based on username.  This makes sense since the rest
      * of the application uses usernames to uniquely identify users.
      */
     public boolean equals(OWFUserDetailsImpl other) {
-        return (this.username == null ? other.username == null : 
+        return (this.username == null ? other.username == null :
             this.username.equals(other.username));
     }
 

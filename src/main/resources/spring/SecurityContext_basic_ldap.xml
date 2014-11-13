@@ -7,7 +7,7 @@
     http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
     <sec:http create-session="stateless">
-        <sec:intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN" requires-channel="https" />
+        <sec:intercept-url pattern="/**" access="ROLE_USER,ROLE_ORG_STEWARD,ROLE_ADMIN" requires-channel="https" />
         <sec:http-basic />
         <sec:port-mappings>
             <sec:port-mapping http="${ozone.unsecurePort}" https="${ozone.port}"/>
