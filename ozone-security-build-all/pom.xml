@@ -5,7 +5,7 @@
 
     <groupId>org.ozoneplatform</groupId>
     <artifactId>ozone-security-build-all</artifactId>
-    <version>4.0.1</version>
+    <version>4.0.2</version>
     <packaging>pom</packaging>
     <description>Project to build all artifacts for the OWF and Marketplace security plugin</description>
     <!--
