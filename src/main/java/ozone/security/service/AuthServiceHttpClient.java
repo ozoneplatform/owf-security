@@ -13,6 +13,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,11 +30,14 @@ public class AuthServiceHttpClient {
     protected char[] keyStorePass;
     private String baseURL;
     private String projectName;
+    private CloseableHttpClient client;
 
 
     private static final Log logger = LogFactory.getLog(RestClientUserDetailsService.class);
 
-    protected CloseableHttpClient createHttpsClient() {
+
+    @PostConstruct
+    public void createHttpsClient() {
 
 
         char[] passwordArray = keyStorePass;
@@ -93,7 +98,7 @@ public class AuthServiceHttpClient {
         }
 
 
-        return HttpClients.custom()
+        client = HttpClients.custom()
                 .setSslcontext(sslContext)
                 .build();
     }
@@ -107,56 +112,55 @@ public class AuthServiceHttpClient {
     }
 
     public JSONObject retrieveRemoteUserDetails(String username) throws IOException {
-        CloseableHttpClient client = createHttpsClient();
+
+        HttpGet httpget = new HttpGet(getRemoteUserUri(username));
+
+        CloseableHttpResponse response = client.execute(httpget);
 
         try {
-            HttpGet httpget = new HttpGet(getRemoteUserUri(username));
+            String contentType = response.getEntity().getContentType().getValue();
 
-            CloseableHttpResponse response = client.execute(httpget);
+            if(response.getStatusLine().getStatusCode() != 200 || !contentType.contains("json")) {
+                throw new IOException("Invalid response from server - status " + response.getStatusLine().getStatusCode() + ": " + EntityUtils.toString(response.getEntity()));
+            } else {
+                JSONObject data = new JSONObject(response);
 
-            try {
-                String contentType = response.getEntity().getContentType().getValue();
-
-                if(response.getStatusLine().getStatusCode() != 200 || !contentType.contains("json")) {
-                    throw new IOException("Invalid response from server - status " + response.getStatusLine().getStatusCode() + ": " + EntityUtils.toString(response.getEntity()));
-                } else {
-                    JSONObject data = new JSONObject(response);
-
-                    return data;
-                }
-            } finally {
-                response.close();
+                return data;
             }
-
         } finally {
-            client.close();
+            response.close();
         }
+
     }
 
     public JSONObject retrieveRemoteUserGroups(String username) throws IOException {
-        CloseableHttpClient client = createHttpsClient();
+
+        HttpGet httpget = new HttpGet(getRemoteUserGroupsUri(username));
+
+        CloseableHttpResponse response = client.execute(httpget);
 
         try {
-            HttpGet httpget = new HttpGet(getRemoteUserGroupsUri(username));
+            String contentType = response.getEntity().getContentType().getValue();
 
-            CloseableHttpResponse response = client.execute(httpget);
+            if (response.getStatusLine().getStatusCode() != 200 || !contentType.contains("json")) {
+                throw new IOException("Invalid response from server - status " + response.getStatusLine().getStatusCode() + ": " + EntityUtils.toString(response.getEntity()));
+            } else {
+                JSONObject data = new JSONObject(response);
 
-            try {
-                String contentType = response.getEntity().getContentType().getValue();
-
-                if(response.getStatusLine().getStatusCode() != 200 || !contentType.contains("json")) {
-                    throw new IOException("Invalid response from server - status " + response.getStatusLine().getStatusCode() + ": " + EntityUtils.toString(response.getEntity()));
-                } else {
-                    JSONObject data = new JSONObject(response);
-
-                    return data;
-                }
-            } finally {
-                response.close();
+                return data;
             }
-
         } finally {
+            response.close();
+        }
+        
+    }
+
+    @PreDestroy
+    public void closeHttpsClient(){
+        try {
             client.close();
+        } catch (IOException e ){
+            logger.error("Exception: " + e);
         }
     }
 
