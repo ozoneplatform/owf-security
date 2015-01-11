@@ -100,6 +100,7 @@ public class AuthServiceHttpClient {
 
         client = HttpClients.custom()
                 .setSslcontext(sslContext)
+                .setMaxConnPerRoute(5)
                 .build();
     }
     
@@ -152,7 +153,7 @@ public class AuthServiceHttpClient {
         } finally {
             response.close();
         }
-        
+
     }
 
     @PreDestroy
