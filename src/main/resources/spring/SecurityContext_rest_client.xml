@@ -3,13 +3,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:sec="http://www.springframework.org/schema/security"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <context:property-placeholder location="SecurityConfig.properties" />
     <sec:http create-session="stateless">
         <sec:intercept-url pattern="/**" access="ROLE_USER,ROLE_ORG_STEWARD,ROLE_ADMIN" requires-channel="https" />
-        <!-- Cannot use <sec:x509> element since it adds an extra authenticationprovider that
-             bypasses the caching provider -->
         <sec:custom-filter ref="x509Filter" position="X509_FILTER"/>
         <sec:port-mappings>
             <sec:port-mapping http="${ozone.unsecurePort}" https="${ozone.port}"/>
