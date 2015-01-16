@@ -5,7 +5,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -173,14 +172,6 @@ public class AuthServiceHttpClient {
         this.trustStorePath = path;
     }
 
-    public void setKeyStore(KeyStore keystore){
-        this.keyStore = keystore;
-    }
-
-    public void setTrustStore(KeyStore truststore) {
-        this.trustStore = truststore;
-    }
-
     public void setKeyStorePass(String keystorepass) {
         this.keyStorePass = keystorepass.toCharArray();
     }
@@ -188,5 +179,7 @@ public class AuthServiceHttpClient {
     public void setProjectName(String projectName){
         this.projectName = projectName;
     }
+
+    public void setBaseURL(String baseURL) { this.baseURL = baseURL; }
 
 }

@@ -25,6 +25,7 @@
         <property name="trustStorePath" value="${ozone.security.truststore.path}" />
         <property name="keyStorePass" value="${ozone.security.keystore.pass}" />
         <property name="projectName" value="${ozone.security.projectName}" />
+        <property name="baseURL" value="${ozone.security.baseURL}" />
 
     </bean>
 

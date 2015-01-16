@@ -8,7 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import ozone.security.authentication.OWFUserDetails;
 import ozone.security.authentication.OWFUserDetailsImpl;
 import ozone.security.authorization.model.GrantedAuthorityImpl;
@@ -160,17 +159,11 @@ public class RestClientUserDetailsService implements UserDetailsService {
         return result;
     }
 
-    public AuthServiceHttpClient getRestClient() {
-        return restClient;
-    }
 
     public void setRestClient(AuthServiceHttpClient restClient) {
         this.restClient = restClient;
     }
 
-    public Map<String, GrantedAuthority> getGroupAuthorityMap() {
-        return groupAuthorityMap;
-    }
 
     static protected OWFUserDetailsImpl addGrantedAuthority(OWFUserDetailsImpl principal, GrantedAuthority auth) {
         Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
