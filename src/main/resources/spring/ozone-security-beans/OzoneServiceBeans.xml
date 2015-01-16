@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="ozoneUserService" class="ozone.security.service.RestClientUserDetailsService">
+
+        <property name="groupAuthorityMap">
+            <map>
+                <entry key="${ozone.security.group}" value="${ozone.security.authority}"/>
+            </map>
+        </property>
+        <property name="restClient" ref="restClient" />
+
+    </bean>
+
+    <bean id="restClient" class="ozone.security.service.AuthServiceHttpClient">
+
+        <property name="keyStorePath" value="${ozone.security.keystore.path}" />
+        <property name="trustStorePath" value="${ozone.security.truststore.path}" />
+        <property name="keyStorePass" value="${ozone.security.keystore.pass" />
+        <property name="projectName" value="${ozone.security.projectName" />
+
+    </bean>
+
+</beans>

@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import ozone.security.authentication.OWFUserDetails;
 import ozone.security.authentication.OWFUserDetailsImpl;
 import ozone.security.authorization.model.GrantedAuthorityImpl;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.util.*;
 
 
-public abstract class RestClientUserDetailsService implements UserDetailsService {
+public class RestClientUserDetailsService implements UserDetailsService {
 
     private static final Log logger = LogFactory.getLog(RestClientUserDetailsService.class);
 
@@ -31,7 +32,7 @@ public abstract class RestClientUserDetailsService implements UserDetailsService
     // Need to implement RestClient
     protected AuthServiceHttpClient restClient = null;
 
-    public UserDetails loadByUsername(String username) throws JSONException {
+    public UserDetails loadUserByUsername(String username) {
 
         OWFUserDetails principal;
         String storageUserName = null;
@@ -48,19 +49,24 @@ public abstract class RestClientUserDetailsService implements UserDetailsService
         JSONObject resultGroups = getGroupsRestResult(username);
         Collection<String> userGroups = null;
 
-        for(String group: (Collection<String>) resultGroups.get("groups")){
-            try {
-                LdapName dn = new LdapName(group);
-                for (int i = 0; i < dn.size(); i++){
-                    if(dn.get(i).startsWith("cn=")){
-                        userGroups.add(dn.get(i).substring(3));
+        try {
+            for(String group: (Collection<String>) resultGroups.get("groups")){
+                try {
+                    LdapName dn = new LdapName(group);
+                    for (int i = 0; i < dn.size(); i++){
+                        if(dn.get(i).startsWith("cn=")){
+                            userGroups.add(dn.get(i).substring(3));
+                        }
                     }
+                } catch (InvalidNameException e) {
+                    logger.error("Exception: " + e);
                 }
-            } catch (InvalidNameException e) {
-                logger.error("Exception: " + e);
-            }
 
+            }
+        } catch (JSONException e) {
+            logger.error("Exception: " + e);
         }
+
 
         for(String group: userGroups){
             if(groupAuthorityMap.get(group) != null){

@@ -12,7 +12,7 @@
         class="ozone.security.authentication.CachingPreAuthenticatedAuthenticationProvider">
         <property name="preAuthenticatedUserDetailsService" >
             <bean class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
-                <constructor-arg ref="userService" />
+                <constructor-arg ref="ozoneUserService" />
             </bean>
         </property>
         <property name="userCache" ref="userCache"/>
@@ -21,14 +21,8 @@
         </property>
     </bean>
 
-    <bean id="cachingUsernamePasswordAuthProvider"
-        class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
-        <property name="userDetailsService" ref="userService"/>
-        <property name="userCache" ref="userCache"/>
-    </bean>
-
     <import resource="UserCacheBeans.xml" />
-    <import resource="UserServiceBeans.xml" />
+    <import resource="OzoneServiceBeans.xml" />
 </beans>
 
 
