@@ -2,19 +2,19 @@ package ozone.security.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import ozone.security.authentication.OWFUserDetails;
 import ozone.security.authentication.OWFUserDetailsImpl;
 import ozone.security.authorization.model.GrantedAuthorityImpl;
 import ozone.security.authorization.target.OwfGroup;
 
-import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
 import java.io.IOException;
 import java.util.*;
 
@@ -26,70 +26,55 @@ public class RestClientUserDetailsService implements UserDetailsService {
     static final String ROLE_USER = "ROLE_USER";
     static final String ROLE_ADMIN = "ROLE_ADMIN";
     protected Map<String, GrantedAuthority> groupAuthorityMap;
-
-
-    // Need to implement RestClient
     protected AuthServiceHttpClient restClient = null;
 
     public UserDetails loadUserByUsername(String username) {
 
-        OWFUserDetails principal;
-        String storageUserName = null;
-        String uid = username;
+        OWFUserDetailsImpl principal;
 
-        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        Collection<OwfGroup> groups = new ArrayList<OwfGroup>();
+        Collection<GrantedAuthority> authorities = getUserAuthorities(username);
 
-        OWFUserDetailsImpl temp = new OWFUserDetailsImpl(storageUserName, "", authorities, groups);
-
-        retrieveUser(temp, uid);
-
-
-        JSONObject resultGroups = getGroupsRestResult(username);
-        Collection<String> userGroups = null;
-
-        try {
-            for(String group: (Collection<String>) resultGroups.get("groups")){
-                try {
-                    LdapName dn = new LdapName(group);
-                    for (int i = 0; i < dn.size(); i++){
-                        if(dn.get(i).startsWith("cn=")){
-                            userGroups.add(dn.get(i).substring(3));
-                        }
-                    }
-                } catch (InvalidNameException e) {
-                    logger.error("Exception: " + e);
-                }
-
-            }
-        } catch (JSONException e) {
-            logger.error("Exception: " + e);
-        }
-
-
-        for(String group: userGroups){
-            if(groupAuthorityMap.get(group) != null){
-                addGrantedAuthority(temp, groupAuthorityMap.get(group));
-            }
-        }
-
-        temp.setDisplayName(temp.getEmail());
-
-        principal = doesUserGetAccess(temp);
+        principal = retrieveUser(username, authorities);
 
         return principal;
 
     }
 
-    protected OWFUserDetailsImpl doesUserGetAccess(OWFUserDetailsImpl principal){
-        if(principal.getAuthorities().isEmpty()){
-            return principal;
+    protected Collection<GrantedAuthority> getUserAuthorities(String username) {
+
+        // Working with mock service
+//        JSONArray resultGroups = new JSONArray();
+//        resultGroups.put("CN=aml_admin,OU=Ozone,O=Ozone,L=Columbia,ST=Maryland,C=US");
+
+        JSONArray resultGroups = new JSONArray();
+        try {
+            resultGroups = getGroupsRestResult(username);
+        } catch (JSONException e) {
+            logger.error("Exception 96: " + e);
+        }
+        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+
+        for(int i = 0; i < resultGroups.length(); i++) {
+            try {
+                LdapName dn = new LdapName(resultGroups.getString(i));
+                for (int j = 0; j < dn.size(); j++) {
+                    Rdn rdn = dn.getRdn(j);
+                    if(rdn.getType().equalsIgnoreCase("cn")) {
+                        String value = (String) rdn.getValue();
+                        if(groupAuthorityMap.get(value) != null){
+                            authorities.add(groupAuthorityMap.get(value));
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("Exception 104: " + e);
+            }
         }
 
         boolean foundRoleUser = false;
         boolean foundRoleAdmin = false;
 
-        for(GrantedAuthority aRole : principal.getAuthorities()) {
+        for(GrantedAuthority aRole: authorities) {
             if(ROLE_USER.equals(aRole.getAuthority())){
                 foundRoleUser = true;
                 break;
@@ -99,34 +84,40 @@ public class RestClientUserDetailsService implements UserDetailsService {
                 foundRoleAdmin = true;
                 break;
             }
-
         }
 
         if(foundRoleAdmin && !foundRoleUser) {
-            return addGrantedAuthority(principal, new GrantedAuthorityImpl(ROLE_USER));
+            authorities.add(new GrantedAuthorityImpl(ROLE_USER));
         }
 
-        return principal;
+        return authorities;
     }
 
 
-    protected void retrieveUser(OWFUserDetailsImpl details, String uid) {
-        String emailAddress = null;
-        String username = details.getUsername();
+    protected OWFUserDetailsImpl retrieveUser(String uid, Collection<GrantedAuthority> authorities) {
+        String emailAddress;
+        String displayName;
 
-        JSONObject response = getRestResult(username);
+        JSONObject response = getRestResult(uid);
 
         try {
             emailAddress = response.getString("email");
         } catch (JSONException e) {
-            logger.error("Exception: " + e);
+            emailAddress = "";
         }
 
-        if(emailAddress == null){
-            emailAddress = uid + "@unknown.com";
+        try {
+            displayName = response.getString("fullName");
+        } catch (JSONException e) {
+            displayName = "";
         }
 
-        details.setEmail(emailAddress);
+
+        OWFUserDetailsImpl principal = new OWFUserDetailsImpl(uid, "", authorities, new ArrayList<OwfGroup>());
+        principal.setEmail(emailAddress);
+        principal.setDisplayName(displayName);
+
+        return principal;
 
     }
 
@@ -137,15 +128,15 @@ public class RestClientUserDetailsService implements UserDetailsService {
         try {
             result = restClient.retrieveRemoteUserDetails(username);
         } catch (IOException e) {
-            logger.error("Exception: " + e.getMessage());
+            logger.error("Exception 148: " + e.getMessage(), e);
         } catch (Exception e) {
-            logger.error("Exception: " + e.getMessage());
+            logger.error("Exception 150: " + e.getMessage(), e);
         }
 
         return result;
     }
 
-    private JSONObject getGroupsRestResult(String username){
+    private JSONArray getGroupsRestResult(String username) throws JSONException {
         JSONObject result = null;
 
         try {
@@ -156,7 +147,7 @@ public class RestClientUserDetailsService implements UserDetailsService {
             logger.error("Exception: " + e.getMessage());
         }
 
-        return result;
+        return result.getJSONArray("grouops");
     }
 
 
@@ -164,24 +155,15 @@ public class RestClientUserDetailsService implements UserDetailsService {
         this.restClient = restClient;
     }
 
-
-    static protected OWFUserDetailsImpl addGrantedAuthority(OWFUserDetailsImpl principal, GrantedAuthority auth) {
-        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-
-        for(GrantedAuthority granted : principal.getAuthorities()){
-            authorities.add(granted);
-        }
-
-        authorities.add(auth);
-
-        return new OWFUserDetailsImpl(principal.getUsername(), principal.getPassword(), authorities, principal.getOwfGroups());
-    }
-
     public void setGroupAuthorityMap(Map<String, String> map){
+        Map temp = new HashMap<String, GrantedAuthority>(map.size(), 1);
+
         for(Map.Entry<String, String> entry: map.entrySet()){
             GrantedAuthority auth = new GrantedAuthorityImpl(entry.getValue());
-            this.groupAuthorityMap.put(entry.getKey(), auth);
+            temp.put(entry.getKey(), auth);
         }
+
+        this.groupAuthorityMap = Collections.unmodifiableMap(temp);
     }
 
 }

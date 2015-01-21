@@ -8,8 +8,8 @@
     http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:property-placeholder location="SecurityConfig.properties" />
-    <sec:http create-session="stateless">
+    <context:property-placeholder location="classpath:SecurityConfig.properties" />
+    <sec:http create-session="stateless" entry-point-ref="http403ForbiddenEntryPoint">
         <sec:intercept-url pattern="/**" access="ROLE_USER,ROLE_ORG_STEWARD,ROLE_ADMIN" requires-channel="https" />
         <sec:custom-filter ref="x509Filter" position="X509_FILTER"/>
         <sec:port-mappings>
@@ -29,6 +29,10 @@
                 <property name="subjectDnRegex" value="(.*)" />
             </bean>
         </property>
+    </bean>
+
+    <bean id="http403ForbiddenEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint">
+
     </bean>
 
     <import resource="ozone-security-beans/AuthenticationProviders.xml" />
