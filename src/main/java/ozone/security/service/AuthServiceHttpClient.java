@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.security.KeyStore;
 
@@ -110,7 +111,7 @@ public class AuthServiceHttpClient {
     }
     
     protected URI getRemoteUserUri(String username) throws UnsupportedEncodingException {
-        return URI.create(baseURL + "/" + "CN=Test%20User,OU=ADVPKI,O=ADV,O=AMBULATE,L=Annapolis%20Junction,ST=Maryland,C=US" + "/info");
+        return URI.create(baseURL + "/" + URLEncoder.encode(username, "UTF-8") + "/info");
     }
 
     protected URI getRemoteUserGroupsUri(String username) throws UnsupportedEncodingException {
@@ -118,6 +119,7 @@ public class AuthServiceHttpClient {
     }
 
     public JSONObject retrieveRemoteUserDetails(String username) throws Exception {
+
         HttpGet httpget = new HttpGet(getRemoteUserUri(username));
 
         CloseableHttpResponse response = client.execute(httpget);
@@ -149,8 +151,7 @@ public class AuthServiceHttpClient {
             if (response.getStatusLine().getStatusCode() != 200 || !contentType.contains("json")) {
                 throw new IOException("Invalid response from server - status " + response.getStatusLine().getStatusCode() + ": " + EntityUtils.toString(response.getEntity()));
             } else {
-                JSONObject data = new JSONObject(response);
-
+                JSONObject data = new JSONObject(response.getEntity().getContent());
                 return data;
             }
         } finally {

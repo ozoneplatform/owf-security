@@ -44,7 +44,7 @@ public class RestClientUserDetailsService implements UserDetailsService {
 
         // Working with mock service
 //        JSONArray resultGroups = new JSONArray();
-//        resultGroups.put("CN=aml_admin,OU=Ozone,O=Ozone,L=Columbia,ST=Maryland,C=US");
+//        resultGroups.put("CN=aml_org,OU=Ozone,O=Ozone,L=Columbia,ST=Maryland,C=US");
 
         JSONArray resultGroups = new JSONArray();
         try {
