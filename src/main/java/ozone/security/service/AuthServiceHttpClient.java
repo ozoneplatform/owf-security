@@ -37,8 +37,7 @@ public class AuthServiceHttpClient {
     private CloseableHttpClient client;
 
 
-    private static final Log logger = LogFactory.getLog(RestClientUserDetailsService.class);
-
+    private static final Log logger = LogFactory.getLog(AuthServiceHttpClient.class);
 
     @PostConstruct
     public void createHttpsClient() {
