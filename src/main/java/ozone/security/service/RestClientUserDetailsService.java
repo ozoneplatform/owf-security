@@ -147,7 +147,7 @@ public class RestClientUserDetailsService implements UserDetailsService {
             logger.error("Exception: " + e.getMessage());
         }
 
-        return result.getJSONArray("grouops");
+        return result.getJSONArray("groups");
     }
 
 
