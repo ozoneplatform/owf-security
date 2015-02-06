@@ -25,71 +25,79 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.security.NoSuchAlgorithmException;
 
 public class AuthServiceHttpClient {
     protected KeyStore trustStore;
-    protected KeyStore keyStore;
+    protected char[] trustStorePass;
+
+    protected KeyStore clientKS;
     protected String trustStorePath;
-    protected String keyStorePath;
-    protected char[] keyStorePass;
+    protected String clientKSPath;
+    protected char[] clientKSPass;
+
     private String baseURL;
     private String projectName;
+    private int maxConnectionsPerRoute = 5;
+
     private CloseableHttpClient client;
 
 
     private static final Log logger = LogFactory.getLog(AuthServiceHttpClient.class);
 
+    private KeyStore loadJKSFromFile(String ksPath, char[]  ksPass) {
+	KeyStore newJKS = null;
+	FileInputStream jksStream = null;
+
+	try {
+	    newJKS = KeyStore.getInstance("JKS");
+	} catch (KeyStoreException kse) {
+	    logger.error("Error getting default instance of JKS keystore: " + kse);
+	}
+
+	if (newJKS != null) {
+	    try {
+		jksStream = new FileInputStream(new File(ksPath));
+		newJKS.load(jksStream, ksPass);
+	    } catch (NoSuchAlgorithmException nsae) {
+		logger.error("Could not load algorithm used to verify KeyStore integrity: " + nsae);
+	    } catch (IOException ioe) {
+		if (ioe.getCause() instanceof UnrecoverableKeyException) {
+		    logger.error("Invalid Password for KeyStore: " + ioe);
+		} else {
+		    logger.error("I/O Error occurred opening KeyStore: " + ioe);
+		}
+	    } catch (CertificateException ce) {
+		logger.error("Unable to load a certificate from the KeyStore: " + ce);
+	    }
+	}
+	
+	return newJKS;
+    }
+
     @PostConstruct
     public void createHttpsClient() {
 
+	logger.debug("START: createHttpsClient()");
 
-        char[] passwordArray = keyStorePass;
+	// TODO: Allow non-JKS format certificate stores (e.g. PKCS12)
 
-        if(trustStorePath != null) {
-            FileInputStream trustStoreStream = null;
-            try {
-                trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-                trustStoreStream = new FileInputStream(new File(trustStorePath));
-                trustStore.load(trustStoreStream, null);
-            } catch (Exception e) {
-                logger.error("Exception: " + e);
-            } finally {
-                if(trustStoreStream != null) {
-                    try {
-                        trustStoreStream.close();
-                    } catch (IOException e){
-                        logger.error("Exception: " + e);
-                    }
+	logger.debug("Loading TrustStore from file: " + trustStorePath);
+	// Load Trust Store
+	trustStore = loadJKSFromFile(trustStorePath, trustStorePass);
 
-                }
-            }
-        }
+	logger.debug("Loading KeyStore from file: " + clientKSPath);
+	clientKS = loadJKSFromFile(clientKSPath, clientKSPass);
 
-        if(keyStorePath != null) {
-            FileInputStream keyStoreStream = null;
-            try {
-                keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-                keyStoreStream = new FileInputStream(new File(keyStorePath));
-                keyStore.load(keyStoreStream, null);
-            } catch (Exception e) {
-                logger.error("Exception: " + e);
-            } finally {
-                if(keyStoreStream != null) {
-                    try {
-                        keyStoreStream.close();
-                    } catch (IOException e){
-                        logger.error("Exception: " + e);
-                    }
-
-                }
-            }
-        }
 
         SSLContextBuilder sslBuilder = SSLContexts.custom();
 
         try {
             sslBuilder.loadTrustMaterial(trustStore);
-            sslBuilder.loadKeyMaterial(keyStore, passwordArray);
+            sslBuilder.loadKeyMaterial(clientKS, clientKSPass);
         } catch (Exception e) {
             logger.error("Exception: " + e);
         }
@@ -105,7 +113,7 @@ public class AuthServiceHttpClient {
 
         client = HttpClients.custom()
                 .setSslcontext(sslContext)
-                .setMaxConnPerRoute(5)
+                .setMaxConnPerRoute(maxConnectionsPerRoute)
                 .build();
     }
     
@@ -169,7 +177,7 @@ public class AuthServiceHttpClient {
     }
 
     public void setKeyStorePath(String path){
-        this.keyStorePath = path;
+        this.clientKSPath = path;
     }
 
     public void setTrustStorePath(String path){
@@ -177,13 +185,20 @@ public class AuthServiceHttpClient {
     }
 
     public void setKeyStorePass(String keystorepass) {
-        this.keyStorePass = keystorepass.toCharArray();
+        this.clientKSPass = keystorepass.toCharArray();
+    }
+
+    public void setTrustStorePass(String truststorepass) {
+	this.trustStorePass = truststorepass.toCharArray();
     }
 
     public void setProjectName(String projectName){
         this.projectName = projectName;
     }
 
+    public void setMaxConnPerRoute(int maxConnections) {
+	this.maxConnectionsPerRoute = maxConnections;
+    }
     public void setBaseURL(String baseURL) { this.baseURL = baseURL; }
 
 }
