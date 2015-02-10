@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -39,7 +40,9 @@ public class AuthServiceHttpClient {
     protected String clientKSPath;
     protected char[] clientKSPass;
 
-    private String baseURL;
+    // private String baseURL;
+    private String baseURL; 
+    private URL requestURL;
     private String projectName;
     private int maxConnectionsPerRoute = 5;
 
@@ -83,6 +86,13 @@ public class AuthServiceHttpClient {
 
 	logger.debug("START: createHttpsClient()");
 
+	// Create the requestURL from the configured baseURL.
+	try {
+	    requestURL = new URL(baseURL);
+	} catch (MalformedURLException mue) {
+	    logger.error("Malformed baseURL set: " + mue);
+	}
+
 	// TODO: Allow non-JKS format certificate stores (e.g. PKCS12)
 
 	logger.debug("Loading TrustStore from file: " + trustStorePath);
@@ -111,21 +121,45 @@ public class AuthServiceHttpClient {
         }
 
 
+	logger.debug("Creating client with custom SSL Context.");
+	logger.debug("Client will be created with " + maxConnectionsPerRoute + " max connections per route");
+
         client = HttpClients.custom()
                 .setSslcontext(sslContext)
                 .setMaxConnPerRoute(maxConnectionsPerRoute)
                 .build();
+	logger.debug("END: createHttpsClient()");
+
     }
     
+    protected URI appendPathToRequestURL(String pathToAppend) {
+	URI updatedURI = null;
+	try {
+	    updatedURI = new URI(requestURL.getProtocol(),
+				 requestURL.getAuthority(),
+				 requestURL.getPath() + pathToAppend,
+				 null,
+				 null);
+	} catch (URISyntaxException uriSE) {
+	    logger.error("Invalid Syntax encountered while attempting to append path to baseURL: " + uriSE);
+	}
+	return updatedURI;
+    }
+
     protected URI getRemoteUserUri(String username) throws UnsupportedEncodingException {
-        return URI.create(baseURL + "/" + URLEncoder.encode(username, "UTF-8") + "/info");
+	return appendPathToRequestURL("/" + username + "/info");
     }
 
     protected URI getRemoteUserGroupsUri(String username) throws UnsupportedEncodingException {
-        return URI.create(baseURL + "/" + URLEncoder.encode(username, "UTF-8") + "/groups/" + projectName );
+	return appendPathToRequestURL("/" + username + "/groups/" + projectName);
     }
 
     public JSONObject retrieveRemoteUserDetails(String username) throws Exception {
+
+	logger.debug("START: retrieveRemoteUserDetails()");
+	logger.debug("[arg] username: " + username);
+
+	JSONObject data = null;
 
         HttpGet httpget = new HttpGet(getRemoteUserUri(username));
 
@@ -137,16 +171,22 @@ public class AuthServiceHttpClient {
             if(response.getStatusLine().getStatusCode() != 200 || !contentType.contains("json")) {
                 throw new IOException("Invalid response from server - status " + response.getStatusLine().getStatusCode() + ": " + EntityUtils.toString(response.getEntity()));
             } else {
-                JSONObject data = new JSONObject(response.getEntity().getContent());
-                return data;
+                data = new JSONObject(response.getEntity().getContent());
+                // return data;
             }
         } finally {
             response.close();
         }
-
+	logger.debug("END: retrieveRemoteUserDetails()");
+	return data;
     }
 
     public JSONObject retrieveRemoteUserGroups(String username) throws IOException {
+
+	logger.debug("START: retrieveRemoteUserGroups()");
+	logger.debug("[arg] username: " + username);
+
+	JSONObject data = null;
 
         HttpGet httpget = new HttpGet(getRemoteUserGroupsUri(username));
 
@@ -158,12 +198,14 @@ public class AuthServiceHttpClient {
             if (response.getStatusLine().getStatusCode() != 200 || !contentType.contains("json")) {
                 throw new IOException("Invalid response from server - status " + response.getStatusLine().getStatusCode() + ": " + EntityUtils.toString(response.getEntity()));
             } else {
-                JSONObject data = new JSONObject(response.getEntity().getContent());
-                return data;
+                data = new JSONObject(response.getEntity().getContent());
+                // return data;
             }
         } finally {
             response.close();
         }
+	logger.debug("END: retrieveRemoteUserGroups()");
+	return data;
 
     }
 
@@ -199,6 +241,8 @@ public class AuthServiceHttpClient {
     public void setMaxConnPerRoute(int maxConnections) {
 	this.maxConnectionsPerRoute = maxConnections;
     }
-    public void setBaseURL(String baseURL) { this.baseURL = baseURL; }
+    public void setBaseURL(String baseURL) { 
+	this.baseURL = baseURL; 
+    }
 
 }
