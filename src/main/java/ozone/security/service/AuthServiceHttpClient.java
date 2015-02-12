@@ -11,6 +11,7 @@ import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.annotation.PostConstruct;
@@ -40,7 +41,6 @@ public class AuthServiceHttpClient {
     protected String clientKSPath;
     protected char[] clientKSPass;
 
-    // private String baseURL;
     private String baseURL; 
     private URL requestURL;
     private String projectName;
@@ -141,17 +141,53 @@ public class AuthServiceHttpClient {
 				 null,
 				 null);
 	} catch (URISyntaxException uriSE) {
-	    logger.error("Invalid Syntax encountered while attempting to append path to baseURL: " + uriSE);
+	    logger.error("Invalid URI Syntax encountered while attempting to append path - " + pathToAppend + " to baseURL: " + uriSE);
 	}
 	return updatedURI;
     }
 
-    protected URI getRemoteUserUri(String username) throws UnsupportedEncodingException {
+    protected URI getRemoteUserUri(String username) {
 	return appendPathToRequestURL("/" + username + "/info");
     }
 
-    protected URI getRemoteUserGroupsUri(String username) throws UnsupportedEncodingException {
+    protected URI getRemoteUserGroupsUri(String username) {
 	return appendPathToRequestURL("/" + username + "/groups/" + projectName);
+    }
+
+    private String cleanJSONString(String jsonToClean) {
+	logger.debug("[cleanJSON] Start");
+	logger.debug("[cleanJSON] (arg 1) jsonToClean: " + jsonToClean);
+	// Right now, we just strip any prefix and suffix that do not match '{' or '}' respectively
+
+	String cleanedJSON = null; 
+	int startIndex = 0;
+	int endIndex;
+
+	if (jsonToClean != null) {
+	    startIndex = jsonToClean.indexOf("{");
+	    logger.debug("[cleanJSON] Found initial '{' at index: " + startIndex);
+
+	    if (startIndex < 1) {
+		startIndex = 1;
+	    }
+	    logger.debug("[cleanJSON] calculated startIndex of JSON: " + startIndex);
+
+	    endIndex = jsonToClean.lastIndexOf("}");
+	    logger.debug("[cleanJSON] Found last '}' at index: " + endIndex);
+
+	    if (endIndex < 1) {
+		endIndex = jsonToClean.length() - 1;
+	    }
+	    logger.debug("[cleanJSON] calculated endIndex: " + endIndex);
+
+	    cleanedJSON = jsonToClean.substring(startIndex, endIndex + 1);
+	} else {
+	    cleanedJSON = "{}";
+	}
+
+	logger.debug("[cleanJSON] cleanedJSON: " + cleanedJSON);
+	logger.debug("[cleanJSON] End");
+	return cleanedJSON;
     }
 
     public JSONObject retrieveRemoteUserDetails(String username) throws Exception {
@@ -160,23 +196,29 @@ public class AuthServiceHttpClient {
 	logger.debug("[arg] username: " + username);
 
 	JSONObject data = null;
-
+       
         HttpGet httpget = new HttpGet(getRemoteUserUri(username));
 
         CloseableHttpResponse response = client.execute(httpget);
 
         try {
             String contentType = response.getEntity().getContentType().getValue();
+	    logger.debug("[Response] Status Code: " + response.getStatusLine().getStatusCode());
+	    logger.debug("Response contentType: " + contentType);
 
             if(response.getStatusLine().getStatusCode() != 200 || !contentType.contains("json")) {
                 throw new IOException("Invalid response from server - status " + response.getStatusLine().getStatusCode() + ": " + EntityUtils.toString(response.getEntity()));
             } else {
-                data = new JSONObject(response.getEntity().getContent());
+		
+                data = new JSONObject(cleanJSONString(EntityUtils.toString(response.getEntity(), "UTF-8")));
                 // return data;
             }
-        } finally {
+        } catch (JSONException jsonExc) {
+	    logger.error("Exception creating JSONObject from returned Content: " + jsonExc);
+	} finally {
             response.close();
         }
+
 	logger.debug("END: retrieveRemoteUserDetails()");
 	return data;
     }
@@ -194,14 +236,17 @@ public class AuthServiceHttpClient {
 
         try {
             String contentType = response.getEntity().getContentType().getValue();
-
+	    logger.debug("[Response] Status Code: " + response.getStatusLine().getStatusCode());
+	    logger.debug("Response contentType: " + contentType);
             if (response.getStatusLine().getStatusCode() != 200 || !contentType.contains("json")) {
                 throw new IOException("Invalid response from server - status " + response.getStatusLine().getStatusCode() + ": " + EntityUtils.toString(response.getEntity()));
             } else {
-                data = new JSONObject(response.getEntity().getContent());
+                data = new JSONObject(cleanJSONString(EntityUtils.toString(response.getEntity(), "UTF-8")));
                 // return data;
             }
-        } finally {
+        } catch (JSONException jsonExc) {
+	    logger.error("Exception thrown when attempting to create JSON Object from returned content: " + jsonExc);
+	} finally {
             response.close();
         }
 	logger.debug("END: retrieveRemoteUserGroups()");

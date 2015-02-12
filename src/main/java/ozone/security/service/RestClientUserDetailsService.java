@@ -25,6 +25,7 @@ public class RestClientUserDetailsService implements UserDetailsService {
 
     static final String ROLE_USER = "ROLE_USER";
     static final String ROLE_ADMIN = "ROLE_ADMIN";
+
     protected Map<String, GrantedAuthority> groupAuthorityMap;
     protected AuthServiceHttpClient restClient = null;
 
@@ -138,6 +139,7 @@ public class RestClientUserDetailsService implements UserDetailsService {
 
     private JSONArray getGroupsRestResult(String username) throws JSONException {
         JSONObject result = null;
+	JSONArray usersGroups = null;
 
         try {
             result = restClient.retrieveRemoteUserGroups(username);
@@ -147,7 +149,12 @@ public class RestClientUserDetailsService implements UserDetailsService {
             logger.error("Exception: " + e.getMessage());
         }
 
-        return result.getJSONArray("groups");
+	if (result != null) {
+	    usersGroups = result.getJSONArray("groups");
+	} else {
+	    usersGroups = new JSONArray("[]");
+	}
+        return usersGroups;
     }
 
 
