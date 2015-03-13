@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,6 +30,7 @@ public class RestClientUserDetailsService implements UserDetailsService {
     protected Map<String, GrantedAuthority> groupAuthorityMap;
     protected AuthServiceHttpClient restClient = null;
 
+    @Cacheable(cacheName="userDetailsCache")
     public UserDetails loadUserByUsername(String username) {
 
         OWFUserDetailsImpl principal;

@@ -35,6 +35,7 @@
 
     </bean>
 
+    <import resource="ozone-security-beans/CacheConfig.xml" />
     <import resource="ozone-security-beans/AuthenticationProviders.xml" />
     <import resource="ozone-security-beans/MethodSecurity.xml" />
 </beans>
