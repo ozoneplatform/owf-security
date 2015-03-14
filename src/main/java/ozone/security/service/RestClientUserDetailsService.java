@@ -101,26 +101,32 @@ public class RestClientUserDetailsService implements UserDetailsService {
     protected OWFUserDetailsImpl retrieveUser(String uid, Collection<GrantedAuthority> authorities) {
         String emailAddress;
         String displayName;
-
+        OWFUserDetailsImpl principal = null;
+        
         JSONObject response = getRestResult(uid);
 
-        try {
-            emailAddress = response.getString("email");
-        } catch (JSONException e) {
-            emailAddress = "";
+        if (response == null) {
+            try {
+                emailAddress = response.getString("email");
+            } catch (JSONException e) {
+                emailAddress = "";
+            }
+
+            try {
+                displayName = response.getString("fullName");
+            } catch (JSONException e) {
+                displayName = "";
+            }
+
+        
+        
+            principal = new OWFUserDetailsImpl(uid, "", authorities, new ArrayList<OwfGroup>());
+            principal.setEmail(emailAddress);
+            principal.setDisplayName(displayName);
+        } else {
+            logger.warn("No response received when requesting user information for " + uid + " from directory provider");
         }
-
-        try {
-            displayName = response.getString("fullName");
-        } catch (JSONException e) {
-            displayName = "";
-        }
-
-
-        OWFUserDetailsImpl principal = new OWFUserDetailsImpl(uid, "", authorities, new ArrayList<OwfGroup>());
-        principal.setEmail(emailAddress);
-        principal.setDisplayName(displayName);
-
+        
         return principal;
 
     }
