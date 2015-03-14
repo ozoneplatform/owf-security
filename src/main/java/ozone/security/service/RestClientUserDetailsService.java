@@ -61,11 +61,10 @@ public class RestClientUserDetailsService implements UserDetailsService {
         for(int i = 0; i < resultGroups.length(); i++) {
             try {
                 LdapName dn = new LdapName(resultGroups.getString(i));
-                for (int j = 0; j < dn.size(); j++) {
-                    Rdn rdn = dn.getRdn(j);
-                    if(rdn.getType().equalsIgnoreCase("cn")) {
+                for (Rdn rdn : dn.getRdns()) {
+                    if (rdn.getType().equalsIgnoreCase("cn")) {
                         String value = (String) rdn.getValue();
-                        if(groupAuthorityMap.get(value) != null){
+                        if(groupAuthorityMap.get(value) != null) {
                             authorities.add(groupAuthorityMap.get(value));
                         }
                     }
