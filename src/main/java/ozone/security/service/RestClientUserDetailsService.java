@@ -104,7 +104,7 @@ public class RestClientUserDetailsService implements UserDetailsService {
         
         JSONObject response = getRestResult(uid);
 
-        if (response == null) {
+        if (response != null) {
             try {
                 emailAddress = response.getString("email");
             } catch (JSONException e) {
