@@ -14,7 +14,7 @@
     <description>Security plugin base classes (and sample support classes) for
         OWF and Marketplace
     </description>
-    <url>https://github.com/ozoneplatform/ozp-security</url>
+    <url>https://github.com/ozone-development/ozp-security</url>
 
     <licenses>
         <license>
@@ -33,9 +33,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git@github.com:ozoneplatform/ozp-security.git</connection>
-        <developerConnection>scm:git:git@github.com:ozoneplatform/ozp-security.git</developerConnection>
-        <url>git@github.com:ozoneplatform/ozp-security.git</url>
+        <connection>scm:git:git@github.com:ozone-development/ozp-security.git</connection>
+        <developerConnection>scm:git:git@github.com:ozone-development/ozp-security.git</developerConnection>
+        <url>git@github.com:ozone-development/ozp-security.git</url>
     </scm>
 
     <repositories>
