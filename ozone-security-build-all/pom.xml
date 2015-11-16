@@ -6,7 +6,7 @@
     <name>OZONE Security parent project</name>
     <groupId>org.ozoneplatform</groupId>
     <artifactId>ozone-security-build-all</artifactId>
-    <version>3.28</version>
+    <version>3.29-SNAPSHOT</version>
     <packaging>pom</packaging>
     <description>Project to build all artifacts for the OWF and Marketplace security plugin</description>
     <url>https://github.com/ozoneplatform/owf-security</url>
