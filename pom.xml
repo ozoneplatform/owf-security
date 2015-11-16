@@ -9,6 +9,7 @@
         <version>3.28-SNAPSHOT</version>
         <relativePath>ozone-security-build-all</relativePath>
     </parent>
+    <name>OZONE Security</name>
     <artifactId>ozone-security</artifactId>
     <packaging>jar</packaging>
     <description>Security plugin base classes (and sample support classes) for OWF and Marketplace</description>

@@ -9,6 +9,7 @@
         <version>3.28-SNAPSHOT</version>
         <relativePath>../ozone-security-build-all</relativePath>
     </parent>
+    <name>OZONE Security Sources</name>
     <artifactId>ozone-security-project</artifactId>
     <packaging>pom</packaging>
     <description>Security plugin source code package for OWF and Marketplace</description>

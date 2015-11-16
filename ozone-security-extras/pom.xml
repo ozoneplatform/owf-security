@@ -9,6 +9,7 @@
         <version>3.28-SNAPSHOT</version>
         <relativePath>../ozone-security-build-all</relativePath>
     </parent>
+    <name>OZONE Security Extras</name>
     <artifactId>ozone-security-extras</artifactId>
     <packaging>pom</packaging>
     <description>Security plugin sample configuration files for OWF and Marketplace</description>
