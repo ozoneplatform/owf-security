@@ -3,31 +3,22 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.ozoneplatform</groupId>
+    <parent>
+        <groupId>org.ozoneplatform</groupId>
+        <artifactId>ozone-security-build-all</artifactId>
+        <version>3.28-SNAPSHOT</version>
+        <relativePath>../ozone-security-build-all</relativePath>
+    </parent>
     <artifactId>ozone-security-project</artifactId>
-    <version>3.27</version>
     <packaging>pom</packaging>
     <description>Security plugin source code package for OWF and Marketplace</description>
-
-    <distributionManagement>
-        <repository>
-            <id>deployment</id>
-            <name>OZONE Releases</name>
-            <url>https://www.owfgoss.org/nexus/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>deployment</id>
-            <name>OZONE Snapshots</name>
-            <url>https://www.owfgoss.org/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <dependencies>
         <dependency>
             <!-- Pull in all dependencies of ozone-security JAR -->
-            <groupId>org.ozoneplatform</groupId>
+            <groupId>${project.parent.groupId}</groupId>
             <artifactId>ozone-security</artifactId>
-            <version>${project.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 
@@ -35,6 +26,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
                 <!--
                   Copy dependencies into lib directory so end users have the
                   option to rebuild this project off-line using Ant.
@@ -56,6 +48,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.6</version>
                 <executions>
                     <execution>
                         <id>create-distribution</id>
@@ -67,6 +60,7 @@
                             <descriptors>
                                 <descriptor>zip.xml</descriptor>
                             </descriptors>
+                            <appendAssemblyId>false</appendAssemblyId>
                         </configuration>
                     </execution>
                 </executions>

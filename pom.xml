@@ -3,49 +3,15 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.ozoneplatform</groupId>
+    <parent>
+        <groupId>org.ozoneplatform</groupId>
+        <artifactId>ozone-security-build-all</artifactId>
+        <version>3.28-SNAPSHOT</version>
+        <relativePath>ozone-security-build-all</relativePath>
+    </parent>
     <artifactId>ozone-security</artifactId>
-    <version>3.27</version>
     <packaging>jar</packaging>
     <description>Security plugin base classes (and sample support classes) for OWF and Marketplace</description>
-
-    <distributionManagement>
-        <repository>
-            <id>deployment</id>
-            <name>OZONE Releases</name>
-            <url>https://www.owfgoss.org/nexus/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>deployment</id>
-            <name>OZONE Snapshots</name>
-            <url>https://www.owfgoss.org/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>spring-maven-release</id>
-            <name>springsource release Repository</name>
-            <url>http://repository.springsource.com/maven/bundles/release</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-        <repository>
-            <id>spring-maven-external</id>
-            <name>springsource release Repository</name>
-            <url>http://repository.springsource.com/maven/bundles/external</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-         </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
