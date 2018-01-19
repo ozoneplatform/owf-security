@@ -24,8 +24,8 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.event.CacheEventListener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.session.SessionDestroyedEvent;
 import org.springframework.security.core.session.SessionInformation;
@@ -37,13 +37,12 @@ import ozone.security.CacheManagerFactory;
 
 public class ClusteredSessionRegistryImpl implements SessionRegistry, ApplicationListener<SessionDestroyedEvent> {
 
-	protected final Log logger = LogFactory.getLog(ClusteredSessionRegistryImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClusteredSessionRegistryImpl.class);
 
     private static final String CACHE_NAME = "sessionIds";
 
 	private CacheManager cacheManager;
 	private Cache sessionIds;
-
 
     /**
      * Implements the event listening needed to reattach a ClusteredSessionInformation
@@ -70,7 +69,7 @@ public class ClusteredSessionRegistryImpl implements SessionRegistry, Applicatio
 
             if (!info.hasSessionRegistry()) {
                 info.setSessionRegistry(ClusteredSessionRegistryImpl.this);
-                logger.debug("setting session registry on element- " + info.getSessionId());
+                LOGGER.debug("setting session registry on element- " + info.getSessionId());
             }
         }
 
@@ -92,7 +91,7 @@ public class ClusteredSessionRegistryImpl implements SessionRegistry, Applicatio
 
 	@Override
 	public void onApplicationEvent(SessionDestroyedEvent event) {
-		logger.debug("onApplicationEvent");
+		LOGGER.debug("onApplicationEvent");
 		if (event instanceof HttpSessionDestroyedEvent) {
 			String sessionId = ((HttpSession) event.getSource()).getId();
 			removeSessionInformation(sessionId);
@@ -101,7 +100,7 @@ public class ClusteredSessionRegistryImpl implements SessionRegistry, Applicatio
 
 	@Override
 	public List<Object> getAllPrincipals() {
-		logger.debug("getAllPrincipals");
+		LOGGER.debug("getAllPrincipals");
         Map allSessions = sessionIds.getAllWithLoader(sessionIds.getKeys(), null);
         Set<Object> principals = new HashSet<Object>();
 
@@ -118,7 +117,7 @@ public class ClusteredSessionRegistryImpl implements SessionRegistry, Applicatio
 
 	@Override
 	public List<SessionInformation> getAllSessions(Object principal, boolean includeExpiredSessions) {
-		logger.debug("Called with includeExpiredSession "+includeExpiredSessions);
+		LOGGER.debug("Called with includeExpiredSession "+includeExpiredSessions);
 
 		Set<String> sessionsUsedByPrincipal = getSessionIds(principal);
 		List<SessionInformation> list = new ArrayList<SessionInformation>();
@@ -132,13 +131,13 @@ public class ClusteredSessionRegistryImpl implements SessionRegistry, Applicatio
 				list.add(sessionInformation);
 			}
 		}
-		logger.debug("List size "+list.size());
+		LOGGER.debug("List size "+list.size());
 
 		return list;
 	}
 	
     private Set<String> getSessionIds(Object principal) {
-        logger.debug("sessionIds.getKeys(): " + sessionIds.getKeys());
+        LOGGER.debug("sessionIds.getKeys(): " + sessionIds.getKeys());
         Map<Object, SessionInformation> collection = sessionIds.getAllWithLoader(sessionIds.getKeys(), null);
         Set<String> ids = new HashSet<String>();
 
@@ -156,12 +155,12 @@ public class ClusteredSessionRegistryImpl implements SessionRegistry, Applicatio
 		Assert.hasText(sessionId, "SessionId required as per interface contract");
     	Element element = sessionIds.get(sessionId);
     	if(element == null) {
-    		logger.debug("Session was null");
+    		LOGGER.debug("Session was null");
     		return null;
     	}
     	else{
     		SessionInformation session = (SessionInformation) element.getValue();
-    		logger.debug("getSessionInformation: Returning session: "+session.getSessionId() + " principal  "+session.getPrincipal()+ " session expired "+session.isExpired());
+    		LOGGER.debug("getSessionInformation: Returning session: "+session.getSessionId() + " principal  "+session.getPrincipal()+ " session expired "+session.isExpired());
     		return session;
     	}
 	}
@@ -178,10 +177,10 @@ public class ClusteredSessionRegistryImpl implements SessionRegistry, Applicatio
 	public void registerNewSession(String sessionId, Object principal) {
 		Assert.hasText(sessionId, "SessionId required as per interface contract");
 		Assert.notNull(principal, "Principal required as per interface contract");
-		logger.debug("registerNewSession: registering session "+sessionId+" principal "+principal);
+		LOGGER.debug("registerNewSession: registering session "+sessionId+" principal "+principal);
 		
 		if (getSessionInformation(sessionId) != null) {
-			logger.debug("registerNewSession: Calling remove session");
+			LOGGER.debug("registerNewSession: Calling remove session");
 			removeSessionInformation(sessionId);
 		}
 		
@@ -193,7 +192,7 @@ public class ClusteredSessionRegistryImpl implements SessionRegistry, Applicatio
 	@Override
 	public void removeSessionInformation(String sessionId) {
 		Assert.hasText(sessionId, "SessionId required as per interface contract");
-		logger.debug("About to remove session "+sessionId);
+		LOGGER.debug("About to remove session "+sessionId);
 
         sessionIds.remove(sessionId);
 	}
@@ -213,7 +212,7 @@ public class ClusteredSessionRegistryImpl implements SessionRegistry, Applicatio
      * describe a session that is already present
      */
     private void updateSessionInformation(SessionInformation info) {
-        logger.debug("Updating session info for " + info.getSessionId());
+        LOGGER.debug("Updating session info for " + info.getSessionId());
         SessionInformation oldInfo = getSessionInformation(info.getSessionId());
         if (oldInfo == null) {
             throw new IllegalArgumentException();

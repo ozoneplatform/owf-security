@@ -2,7 +2,6 @@ package ozone.securitysample.authentication.basic;
 
 import org.hamcrest.core.IsInstanceOf;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,8 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import ozone.security.authorization.model.GrantedAuthorityImpl;
 import ozone.security.authentication.OWFUserDetailsImpl;
 import org.springframework.security.core.GrantedAuthority;
-import java.util.ArrayList;
-import java.util.Set;
+
 import java.util.HashSet;
 
 public class PerfTestingDetailsServiceTest {

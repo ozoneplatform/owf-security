@@ -1,7 +1,7 @@
 package ozone.security.authentication;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
@@ -21,7 +21,7 @@ import org.springframework.util.Assert;
 public class CachingPreAuthenticatedAuthenticationProvider
     extends PreAuthenticatedAuthenticationProvider {
 
-    private static final Log logger = LogFactory.getLog(CachingPreAuthenticatedAuthenticationProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CachingPreAuthenticatedAuthenticationProvider.class);
 
     private UserCache userCache;
 
@@ -48,12 +48,12 @@ public class CachingPreAuthenticatedAuthenticationProvider
             return null;
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("PreAuthenticated authentication request: " + authentication);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("PreAuthenticated authentication request: " + authentication);
         }
 
         if (authentication.getPrincipal() == null) {
-            logger.debug("No pre-authenticated principal found in request.");
+            LOGGER.debug("No pre-authenticated principal found in request.");
 
             if (throwExceptionWhenTokenRejected) {
                 throw new BadCredentialsException("No pre-authenticated principal found in request.");
@@ -62,7 +62,7 @@ public class CachingPreAuthenticatedAuthenticationProvider
         }
 
         if (authentication.getCredentials() == null) {
-            logger.debug("No pre-authenticated credentials found in request.");
+            LOGGER.debug("No pre-authenticated credentials found in request.");
 
             if (throwExceptionWhenTokenRejected) {
                 throw new BadCredentialsException("No pre-authenticated credentials found in request.");
@@ -82,7 +82,7 @@ public class CachingPreAuthenticatedAuthenticationProvider
             ud = preAuthenticatedUserDetailsService.loadUserDetails(authentication);
         }
         else {
-            logger.debug("User found in cache: " + authentication.getName());
+            LOGGER.debug("User found in cache: " + authentication.getName());
         }
 
         userDetailsChecker.check(ud);

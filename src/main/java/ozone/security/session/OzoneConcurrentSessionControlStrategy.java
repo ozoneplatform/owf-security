@@ -4,14 +4,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 
-import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 
 
-import org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
@@ -27,10 +27,9 @@ import ozone.security.CacheManagerFactory;
  *
  */
 
-public class OzoneConcurrentSessionControlStrategy extends ConcurrentSessionControlStrategy {
+public class OzoneConcurrentSessionControlStrategy extends ConcurrentSessionControlAuthenticationStrategy {
 
-    private static final Logger log = 
-        Logger.getLogger(OzoneConcurrentSessionControlStrategy.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OzoneConcurrentSessionControlStrategy.class);
 
     //name of the cache in which the configured max sessions value is stored
     private static final String CACHE_NAME = "allowedSessions";
@@ -66,9 +65,8 @@ public class OzoneConcurrentSessionControlStrategy extends ConcurrentSessionCont
      * This method has been copied from ConcurrentSessionControlStrategy and modified to
      * better ensure that more that the allowed number of sessions are never valid
      * at the same time.
-     *
-     * @see ConcurentSessionControlStrategy.allowableSessionsExceeded
      */
+    @Override
     protected void allowableSessionsExceeded(List<SessionInformation> sessions, 
             int allowableSessions, SessionRegistry registry) 
             throws SessionAuthenticationException {
@@ -81,7 +79,7 @@ public class OzoneConcurrentSessionControlStrategy extends ConcurrentSessionCont
 
         //BEGIN CUSTOMIZATIONS
 
-        log.debug("allowableSessionExceeded. allowed: " + allowableSessions + " Current: " + 
+        LOGGER.debug("allowableSessionExceeded. allowed: " + allowableSessions + " Current: " +
                 sessions.size());
 
         //sort the session by recency, increasing
@@ -114,7 +112,7 @@ public class OzoneConcurrentSessionControlStrategy extends ConcurrentSessionCont
      */
     public int getMaximumSessionsForThisUser(Authentication a) {
         int retval = (Integer)allowedSessionsCache.get(CACHE_KEY).getValue();
-        log.debug("getMaximumSessionsForThisUser returning " + retval);
+        LOGGER.debug("getMaximumSessionsForThisUser returning " + retval);
         return retval;
     }
 }
