@@ -1,26 +1,38 @@
-# OS generated files #
-######################
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-#Icon?
-ehthumbs.db
+!.gitkeep
+
+.gradle/
+build/
+bin/
+
+### JetBrains (IntelliJ)
+.idea/
+
+### Windows
 Thumbs.db
-
-# IDE support files #
-#####################
-/.classpath
-/.project
-/.settings
-/lib
-/target-eclipse
-target
-*.iml
-.idea
-
-# Temporary files #
-###################
+ehthumbs.db
+ehthumbs_vista.db
 *.stackdump
-*.swp
+Desktop.ini
+
+### Mac OS
+# General
+*.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+### Eclipse files
+.classpath
+.project
+.settings/
+
+### JGIT CAC files
+RITE_server_public/
+agent.jar
+card.config
+jgit-cli-2.3-20130108.jar
+jgit.cac.sh
+jgit.unix.sh
+jssecacerts
+mscapi-agent-option/
+pkcs11.config

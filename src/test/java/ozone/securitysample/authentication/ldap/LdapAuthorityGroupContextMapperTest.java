@@ -1,6 +1,5 @@
 package ozone.securitysample.authentication.ldap;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -12,9 +11,6 @@ import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ldap.core.DirContextAdapter;
-
-import ozone.securitysample.authentication.ldap.LdapAuthorityGroup;
-import ozone.securitysample.authentication.ldap.LdapAuthorityGroupContextMapper;
 
 public class LdapAuthorityGroupContextMapperTest {
 	

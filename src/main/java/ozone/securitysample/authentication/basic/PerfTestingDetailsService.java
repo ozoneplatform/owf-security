@@ -2,14 +2,13 @@ package ozone.securitysample.authentication.basic;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import ozone.security.authentication.OWFUserDetailsImpl;
 import ozone.security.authorization.model.GrantedAuthorityImpl;
 import ozone.security.authorization.target.OwfGroup;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * An implementation of a DetailsService that should only be used for testing.
@@ -21,10 +20,9 @@ import org.apache.commons.logging.LogFactory;
  * where security is not a concern.
  */
 public class PerfTestingDetailsService implements UserDetailsService {
-    private static final Log log = LogFactory.getLog(PerfTestingDetailsService.class);
 
     public UserDetails loadUserByUsername(String username) {
-        Collection<OwfGroup> owfGroups = new ArrayList<OwfGroup>();
+        Collection<OwfGroup> owfGroups = new ArrayList<>();
         OWFUserDetailsImpl owfUser = new OWFUserDetailsImpl(username, "password", getAuthorities(username), owfGroups);
         owfUser.setDisplayName(username);
         owfUser.setEmail(username + "@ozonePerfTesting.org");
@@ -34,7 +32,7 @@ public class PerfTestingDetailsService implements UserDetailsService {
     }
 
     protected Collection<GrantedAuthority> getAuthorities(String username) {
-        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new GrantedAuthorityImpl("ROLE_USER"));
         if(username.contains("Admin")) {
             authorities.add(new GrantedAuthorityImpl("ROLE_ADMIN"));
