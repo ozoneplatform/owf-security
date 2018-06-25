@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,7 +45,7 @@ import ozone.security.authorization.target.OwfGroup;
  */
 public class MyDetailsService implements UserDetailsService {
 
-	private static final Log log = LogFactory.getLog(MyDetailsService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MyDetailsService.class);
 	
 	// Static strings.
 	private static final String REGEX_COMMA = "\\,";
@@ -65,17 +65,18 @@ public class MyDetailsService implements UserDetailsService {
      * @throws UsernameNotFoundException
      * @throws DataAccessException
      */
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException,DataAccessException {
-		log.debug("loading user by username [" + username + "]");
+    @Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException,DataAccessException {
+		LOGGER.debug("loading user by username [" + username + "]");
     	
     	Map<String,OWFUserDetails> userMap = getUserMap();
 		OWFUserDetails user = userMap.get(username);
         if(user == null){
-        	log.error("No matching user found [" + username + "].");
+        	LOGGER.error("No matching user found [" + username + "].");
         	throw new UsernameNotFoundException("The user details service was passed authenticated credentials for '"+
         										username + "', but the credentials were not found. Access is denied.");
         }
-        log.info("successfully logged in user [" + user.getUsername() + "], authorities [" + ((OWFUserDetailsImpl)user).displayAuthorities() + "], groups [" + ((OWFUserDetailsImpl)user).displayOwfGroups() + "]");
+        LOGGER.info("successfully logged in user [" + user.getUsername() + "], authorities [" + ((OWFUserDetailsImpl)user).displayAuthorities() + "], groups [" + ((OWFUserDetailsImpl)user).displayOwfGroups() + "]");
         return user;
     }
     
@@ -91,10 +92,10 @@ public class MyDetailsService implements UserDetailsService {
 	        if (inputStream != null) {
 	        	properties.load(inputStream);
 	        } else {
-	        	log.error("Property file [" + propertyFileName + "] not found.");
+	        	LOGGER.error("Property file [" + propertyFileName + "] not found.");
 	        }
     	} catch (IOException e) {
-    		log.error("I/O error retrieving users.", e);
+    		LOGGER.error("I/O error retrieving users.", e);
     	}	
     	return properties;
     }
@@ -189,8 +190,8 @@ public class MyDetailsService implements UserDetailsService {
     	if (this.userMap == null) {
     		Properties properties = loadPropertiesFile(this.propertyFileName);
     		this.userMap = buildUserMap(properties);
-            log.debug("users:"+this.userMap);
-        	log.debug("loaded [" + this.userMap.size() + "] users");
+            LOGGER.debug("users:"+this.userMap);
+        	LOGGER.debug("loaded [" + this.userMap.size() + "] users");
     	}
     	return this.userMap;
     }

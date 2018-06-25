@@ -1,42 +1,34 @@
 package ozone.securitysample.authentication.ldap;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import java.text.MessageFormat;
 
 import javax.naming.directory.Attributes;
 import javax.naming.NamingException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.springframework.ldap.core.LdapEncoder;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.ContextMapper;
-import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.support.LdapContextSource;
-
+import org.springframework.ldap.support.LdapEncoder;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import ozone.security.authentication.OWFUserDetailsImpl;
-import ozone.security.authorization.model.GrantedAuthorityImpl;
 import ozone.security.authorization.model.OwfGroupImpl;
 import ozone.security.authorization.target.OwfGroup;
 
 /**
- * Context mapper to convert to a user details object. Includes code to
- * fetch OWF groups from the database
+ * Context mapper to convert to a user details object. Includes code to fetch OWF groups from the database.
  */
 public class OWFUserDetailsContextMapper implements UserDetailsContextMapper {
 
-	private static final Log log = LogFactory
-			.getLog(OWFUserDetailsContextMapper.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OWFUserDetailsContextMapper.class);
 
     private LdapContextSource contextSource;
     private LdapTemplate ldapTemplate;
@@ -50,32 +42,29 @@ public class OWFUserDetailsContextMapper implements UserDetailsContextMapper {
         this.filter = filter;
     }
 
-	/**
+    /**
 	 * Main overridden function, maps specific fields from the context object to
 	 * the user details object.
-	 * 
-	 * @param ctx
-	 *            - directory context
+	 *
+	 * @param ctx - directory context
      * @param username - The username
      * @param authority - Authorities that this user has been determined to have
 	 * @return userDetails object
 	 */
     @Override
 	public UserDetails mapUserFromContext(DirContextOperations ctx, String username, Collection<? extends GrantedAuthority> authority) {
-		OWFUserDetailsImpl userDetails = null;
+        Collection<OwfGroup> groups = determineOwfGroups(ctx.getDn().toString());
 
-
-        Collection<OwfGroup> groups = determineOwfGroups(ctx.getDn()
-                .toString());
-
-        userDetails = new OWFUserDetailsImpl(ctx
-                .getStringAttribute("cn"), ctx.getObjectAttribute(
-                "userpassword").toString(), authority, groups);
+        OWFUserDetailsImpl userDetails = new OWFUserDetailsImpl(
+                ctx.getStringAttribute("cn"),
+                ctx.getObjectAttribute("userpassword").toString(),
+                authority,
+                groups);
 
         userDetails.setDisplayName(ctx.getStringAttribute("givenname"));
         userDetails.setEmail(ctx.getStringAttribute("mail"));
 
-        log.debug("user details [" + userDetails.toString() + "].");
+        LOGGER.debug("user details [" + userDetails.toString() + "].");
 
 		return userDetails;
 	}
@@ -86,23 +75,23 @@ public class OWFUserDetailsContextMapper implements UserDetailsContextMapper {
     }
 
 	/**
-	 * Determine owf groups from the list of groups. Translates into OwfGroup
-	 * objects
-	 * 
-	 * @param dn
-	 *            the user's dn
-	 * @return GrantedAuthority array
+	 * Determine owf groups from the list of groups. Translates into OwfGroup objects
 	 */
-    @SuppressWarnings("unchecked")
-	protected Collection<OwfGroup> determineOwfGroups(final String dn) {
-        return (Collection<OwfGroup>) ldapTemplate.search(searchBase, 
-            //fill in the filter string
-            MessageFormat.format(filter, LdapEncoder.filterEncode(dn + "," + contextSource.getBaseLdapPath().toString())),
-                new AttributesMapper() {
-                    public Object mapFromAttributes(Attributes attrs) throws NamingException {
-                        //our sample ldap data does not include all of these fields
-                        return new OwfGroupImpl((String)attrs.get("cn").get(), null, null, true);
-                    }   
-                });
+    private Collection<OwfGroup> determineOwfGroups(final String userDn) {
+        return ldapTemplate.search(
+                searchBase,
+                createFilterForUserDN(userDn),
+                OWFUserDetailsContextMapper::mapGroupFromCN);
 	}
+
+	private String createFilterForUserDN(String userDn) {
+        String userFilter = String.format("%s,%s", userDn, contextSource.getBaseLdapPath().toString());
+
+        return MessageFormat.format(filter, LdapEncoder.filterEncode(userFilter));
+    }
+
+    private static OwfGroup mapGroupFromCN(Attributes attrs) throws NamingException {
+        return new OwfGroupImpl((String) attrs.get("cn").get(), null, null, true);
+    }
+
 }
