@@ -14,7 +14,7 @@ buildscript {
 
 
 group 'org.ozoneplatform'
-version '4.0.4-0-RC1'
+version '4.0.4-0'
 
 
 apply plugin: 'io.spring.dependency-management'
@@ -35,7 +35,7 @@ repositories {
 dependencyManagement {
     imports {
         mavenBom 'org.grails:grails-bom:' + grailsVersion
-        mavenBom 'org.ozoneplatform:ozone-classic-bom:7.17.2-0-SNAPSHOT'
+        mavenBom 'org.ozoneplatform:ozone-classic-bom:7.17.2-0'
     }
 
     applyMavenExclusions false
